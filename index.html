@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MFD Memory Module</title>
-    <!--
-    Original Python Author: Frank Mah
-    Adapted to JS/HTML: Nov 3, 2023
-    Theme: Aviation Technical/Glass Cockpit
-    -->
     <style>
         /* Import a technical, monospaced font */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
         :root {
             /* Aviation Display Color Palette */
@@ -124,7 +119,37 @@
             color: var(--text-active);
             text-shadow: 0 0 10px var(--text-active);
             min-height: 80px;
+            text-align: center;
             transition: opacity 0.2s ease;
+        }
+
+        /* HORIZONTAL TIMER BAR (Moved below letters) */
+        #timer-zone {
+            position: relative;
+            width: 450px;
+            height: 14px;
+            border: 2px solid var(--panel-border);
+            background: rgba(0, 0, 0, 0.6);
+            margin-top: 25px;
+            padding: 2px;
+        }
+
+        #timer-bar-fill {
+            background-color: var(--text-active);
+            height: 100%;
+            width: 100%; /* Default starting state */
+            transition: width 0.1s linear;
+        }
+
+        #timer-digital {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--warning-amber);
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
         }
 
         /* CONTROL / INPUT AREA */
@@ -180,41 +205,6 @@
             transform: translateY(4px);
         }
 
-        /* VISUAL TIMER BAR */
-        #timer-zone {
-            position: absolute;
-            right: 20px;
-            top: 100px;
-            width: 40px;
-            height: 250px;
-            border: 2px solid var(--panel-border);
-            display: flex;
-            flex-direction: column-reverse;
-            padding: 2px;
-        }
-
-        #timer-bar-fill {
-            background-color: var(--text-active);
-            width: 100%;
-            height: 100%;
-            transition: height 0.1s linear;
-        }
-
-        #timer-digital {
-            position: absolute;
-            bottom: -30px;
-            width: 100%;
-            text-align: center;
-            color: var(--warning-amber);
-            font-weight: bold;
-        }
-
-        /* REPLAY/SCORE AREA */
-        #replay-zone {
-            font-size: 18px;
-            color: var(--text-data);
-        }
-
         /* UTILITY CLASSES */
         .hidden { display: none !important; }
         .correct { color: var(--success-green) !important; }
@@ -225,37 +215,30 @@
 </head>
 <body>
 
-<!-- The ruggedised EFB device -->
 <div id="efb-container">
     <div class="bezel-button b-top">POWER</div>
     <div class="bezel-button b-left">BRT ADJ</div>
     
-    <!-- The electronic glass screen -->
     <div id="screen">
         
-        <!-- SYSTEM STATUS BAR (Banner statement adaptation) -->
         <div id="status-bar">
             <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
             <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
             <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
         </div>
 
-        <!-- MAIN DATA DISPLAY (Memorization phase) -->
         <div id="main-display">
             <div id="memorize-prompt" class="hidden">MEMORIZE DATA STRING:</div>
             <div id="word-readout">SYSTEM READY</div>
 
-            <!-- Visual Timer Bar -->
             <div id="timer-zone" class="hidden">
                 <div id="timer-bar-fill"></div>
                 <div id="timer-digital">5S</div>
             </div>
         </div>
 
-        <!-- CONTROL SECTOR (Input/Action phase) -->
         <div id="control-sector">
             
-            <!-- Pilot Input Group -->
             <div id="input-group" class="hidden">
                 <div class="prompt-amber" style="margin-bottom: 10px;">PILOT INPUT: [RECALL MODE]</div>
                 <input type="text" id="guess-input" autocomplete="off" maxlength="15">
@@ -263,13 +246,11 @@
                 <button id="submit-btn" class="aviator-btn">Enter</button>
             </div>
 
-            <!-- Feedback & Play Again Group -->
             <div id="replay-group" class="hidden">
                 <div id="feedback-text" style="margin-bottom: 15px;"></div>
                 <button id="action-btn" class="aviator-btn">Initialize New Module</button>
             </div>
 
-            <!-- Initial Start Button -->
             <div id="start-group">
                 <button id="start-btn" class="aviator-btn">Initialize System</button>
             </div>
@@ -280,11 +261,6 @@
 </div>
 
 <script>
-    /*
-    * MEMORY MODULE LOGIC
-    * Re-implemented from original Python source.
-    */
-
     // Initialize state variables
     let levelCount = 1;
     let correct = 0;
@@ -314,57 +290,47 @@
     const submitBtn = document.getElementById('submit-btn');
     const actionBtn = document.getElementById('action-btn');
 
-    // Adaptation of randLetter()
     function generateRandomLetter() {
-        // Python: chr(random.randrange(65, 91))
         const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
         return String.fromCharCode(charCode);
     }
 
-    // Adaptation of setWord() combined with horizontal string storage
     function generateMemoryString(length) {
         let tempWordArray = [];
         for (let i = 0; i < length; i++) {
             tempWordArray.push(generateRandomLetter());
         }
-        return tempWordArray.join(" "); // Space separated for display
+        return tempWordArray.join(" "); 
     }
 
-    // Pad numbers for technical readout (e.g., 1 -> "01")
     function pad(num) {
         return num.toString().padStart(2, '0');
     }
 
-    // Updates the System Status banner
     function updateStatusBar() {
         levelDisplay.innerText = pad(levelCount);
         correctDisplay.innerText = pad(correct);
         incorrectDisplay.innerText = pad(incorrect);
     }
 
-    // Utility sleep function using Promises
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    // Refactored countdown loop to work asynchronously in browser
     async function runMemorizationTimer(seconds) {
         isCountingDown = true;
         timerZone.classList.remove('hidden');
         
-        // Calculate dynamic pause based on level
-        // Python original: time.sleep(3/levelCount)
         const baseInterval_ms = (3 / levelCount) * 1000;
         
         for (let i = seconds; i > 0; i--) {
-            if (!isCountingDown) break; // Allow interrupt
+            if (!isCountingDown) break; 
 
-            // Update digital display
+            // Update digital display string
             timerDigital.innerText = i + "S";
             
-            // Update visual bar fill %
+            // Modified to scale horizontally via width property
             const fillPercentage = (i / seconds) * 100;
-            timerBar.style.height = fillPercentage + "%";
+            timerBar.style.width = fillPercentage + "%";
             
-            // Replicates time.sleep
             await sleep(baseInterval_ms);
         }
         
@@ -372,23 +338,18 @@
         completeMemorizationPhase();
     }
 
-    // Corresponds to the transition after the timer loop in Python
     function completeMemorizationPhase() {
-        // "Clear screen" effects
         wordReadout.innerText = "";
         wordReadout.style.opacity = 0;
         memorizePrompt.classList.add('hidden');
         timerZone.classList.add('hidden');
 
-        // Activate Input Group
         inputGroup.classList.remove('hidden');
         guessInput.value = "";
         guessInput.focus();
     }
 
-    // Adaptation of Main game loop (single round execution)
     function startRound() {
-        // UI Reset
         updateStatusBar();
         startGroup.classList.add('hidden');
         inputGroup.classList.add('hidden');
@@ -397,21 +358,20 @@
         wordReadout.classList.remove('correct', 'incorrect');
         guessInput.blur();
 
-        // Python original: countStop = random.randrange(4, 5+levelCount)
+        // Establish full bar width constraint before timer reduction starts
+        timerBar.style.width = "100%";
+
         const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
         
-        // Generate and display word
         currentWordString = generateMemoryString(wordLength);
         wordReadout.innerText = currentWordString;
         memorizePrompt.classList.remove('hidden');
 
-        // Initiate countdown
         runMemorizationTimer(wordLength);
     }
 
-    // Comparison logic after user input
     function finalizeGuess() {
-        if (isCountingDown) return; // Prevent premature submission
+        if (isCountingDown) return; 
 
         const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
         const actualString = currentWordString.replace(/\s/g, "");
@@ -422,18 +382,15 @@
         let feedbackHTML = "";
 
         if (pilotGuess === actualString) {
-            // Correct Answer Logic
             wordReadout.innerText = "VALIDATED";
             wordReadout.classList.add('correct');
             feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
             correct++;
             
-            // Difficulty increment logic
             if (correct % 3 === 0) {
                 levelCount++;
             }
         } else {
-            // Incorrect Answer Logic
             wordReadout.innerText = "ERROR";
             wordReadout.classList.add('incorrect');
             feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
@@ -441,12 +398,10 @@
             incorrect++;
         }
 
-        // Difficulty ceiling adjustment from Python
         if (levelCount >= 10) {
             levelCount = 10;
         }
 
-        // Finalize score display and replay prompt
         updateStatusBar();
         const totalRounds = correct + incorrect;
         feedbackText.innerHTML = `${feedbackHTML}<br><br>Current Session Score: ${correct}/${totalRounds}`;
@@ -458,13 +413,11 @@
     actionBtn.addEventListener('click', startRound);
     submitBtn.addEventListener('click', finalizeGuess);
 
-    // Allow pressing "Enter" inside the input box to submit
     guessInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             finalizeGuess();
         }
     });
-
 </script>
 
 </body>
