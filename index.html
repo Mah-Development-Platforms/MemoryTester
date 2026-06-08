@@ -8,223 +8,221 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
 :root {
-            /* Aviation Display Color Palette */
---bg-cockpit: #0a1118;
---panel-border: #34495e;
---text-active: #00ffff;
---text-data: #ffffff;
---text-standby: #95a5a6;
---warning-amber: #f1c40f;
---error-red: #e74c3c;
---success-green: #2ecc71;
---screen-glow: rgba(0, 255, 255, 0.1);
+    /* Aviation Display Color Palette */
+    --bg-cockpit: #0a1118;
+    --panel-border: #34495e;
+    --text-active: #00ffff;
+    --text-data: #ffffff;
+    --text-standby: #95a5a6;
+    --warning-amber: #f1c40f;
+    --error-red: #e74c3c;
+    --success-green: #2ecc71;
+    --screen-glow: rgba(0, 255, 255, 0.1);
 }
 
 * {
-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-background-color: var(--bg-cockpit);
-color: var(--text-data);
-font-family: 'Roboto Mono', monospace;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-overflow: hidden;
+    background-color: var(--bg-cockpit);
+    color: var(--text-data);
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
 }
 
 #efb-container {
-background-color: #1c2e3e;
-border: 10px solid var(--panel-border);
-border-radius: 12px;
-            width: 850px; /* Slightly widened to fit debriefing text comfortably */
-            width: 850px;
-height: 580px;
-box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
-position: relative;
-display: flex;
-flex-direction: column;
-padding: 5px;
+    background-color: #1c2e3e;
+    border: 10px solid var(--panel-border);
+    border-radius: 12px;
+    width: 850px;
+    height: 580px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
 }
 
 .bezel-button {
-position: absolute;
-background: #2c3e50;
-border: 1px solid #1a252f;
-color: #7f8c8d;
-font-size: 10px;
-padding: 5px;
-border-radius: 4px;
-text-align: center;
-cursor: not-allowed;
+    position: absolute;
+    background: #2c3e50;
+    border: 1px solid #1a252f;
+    color: #7f8c8d;
+    font-size: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: not-allowed;
 }
 .b-top { top: -35px; width: 60px; left: 50%; transform: translateX(-50%); }
 .b-left { left: -35px; top: 50%; transform: translateY(-50%) rotate(-90deg); width: 80px;}
 
 #screen {
-background: black;
-flex-grow: 1;
-border: 2px solid #000;
-border-radius: 4px;
-position: relative;
-box-shadow: inset 0 0 50px var(--screen-glow);
-display: flex;
-flex-direction: column;
-padding: 20px;
-overflow: hidden;
+    background: black;
+    flex-grow: 1;
+    border: 2px solid #000;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: inset 0 0 50px var(--screen-glow);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
 }
 
 #status-bar {
-border-bottom: 2px solid var(--panel-border);
-padding-bottom: 10px;
-margin-bottom: 20px;
-display: flex;
-justify-content: space-between;
-            align-items: center;
-font-size: 14px;
-color: var(--text-standby);
+    border-bottom: 2px solid var(--panel-border);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-standby);
 }
 
 .status-item span {
-color: var(--warning-amber);
-font-weight: bold;
+    color: var(--warning-amber);
+    font-weight: bold;
 }
 
-        /* Flight Manual Link/Button Style */
-        .manual-link {
-            color: #000;
-            background-color: var(--warning-amber);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 3px;
-            text-transform: uppercase;
-            transition: background-color 0.2s;
-        }
+/* Flight Manual Link/Button Style */
+.manual-link {
+    color: #000;
+    background-color: var(--warning-amber);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+}
 
-        .manual-link:hover {
-            background-color: #f39c12;
-        }
+.manual-link:hover {
+    background-color: #f39c12;
+}
 
 #main-display {
-flex-grow: 1;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 #memorize-prompt {
-color: var(--text-standby);
-font-size: 18px;
-margin-bottom: 10px;
+    color: var(--text-standby);
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
 #word-readout {
-font-size: 64px;
-letter-spacing: 15px;
-color: var(--text-active);
-text-shadow: 0 0 10px var(--text-active);
-min-height: 80px;
-text-align: center;
-transition: opacity 0.2s ease;
+    font-size: 64px;
+    letter-spacing: 15px;
+    color: var(--text-active);
+    text-shadow: 0 0 10px var(--text-active);
+    min-height: 80px;
+    text-align: center;
+    transition: opacity 0.2s ease;
 }
 
 #timer-zone {
-position: relative;
-width: 450px;
-height: 14px;
-border: 2px solid var(--panel-border);
-background: rgba(0, 0, 0, 0.6);
-margin-top: 25px;
-padding: 2px;
+    position: relative;
+    width: 450px;
+    height: 14px;
+    border: 2px solid var(--panel-border);
+    background: rgba(0, 0, 0, 0.6);
+    margin-top: 25px;
+    padding: 2px;
 }
 
 #timer-bar-fill {
-background-color: var(--text-active);
-height: 100%;
-width: 100%;
-transition: width 0.1s linear;
+    background-color: var(--text-active);
+    height: 100%;
+    width: 100%;
+    transition: width 0.1s linear;
 }
 
 #timer-digital {
-position: absolute;
-bottom: -25px;
-left: 50%;
-transform: translateX(-50%);
-color: var(--warning-amber);
-font-weight: bold;
-font-size: 14px;
-letter-spacing: 1px;
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--warning-amber);
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
 }
 
 #control-sector {
-border-top: 1px solid var(--panel-border);
-padding-top: 15px;
-margin-top: auto;
-text-align: center;
-            min-height: 150px; /* Enhanced to support the tactical tips */
-            min-height: 150px;
+    border-top: 1px solid var(--panel-border);
+    padding-top: 15px;
+    margin-top: auto;
+    text-align: center;
+    min-height: 150px;
 }
 
 input[type="text"] {
-background-color: transparent;
-border: 2px solid var(--panel-border);
-color: var(--text-active);
-font-family: 'Roboto Mono', monospace;
-font-size: 24px;
-padding: 10px;
-width: 300px;
-text-align: center;
-text-transform: uppercase;
-outline: none;
-margin-bottom: 10px;
-transition: border-color 0.3s;
+    background-color: transparent;
+    border: 2px solid var(--panel-border);
+    color: var(--text-active);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 24px;
+    padding: 10px;
+    width: 300px;
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
 }
 
 input[type="text"]:focus {
-border-color: var(--text-active);
+    border-color: var(--text-active);
 }
 
 .aviator-btn {
-background: #2c3e50;
-border: 1px solid var(--panel-border);
-color: var(--text-data);
-font-family: 'Roboto Mono', monospace;
-text-transform: uppercase;
-font-weight: bold;
-font-size: 16px;
-padding: 12px 24px;
-cursor: pointer;
-box-shadow: 0 4px #1a252f;
-transition: all 0.1s ease;
+    background: #2c3e50;
+    border: 1px solid var(--panel-border);
+    color: var(--text-data);
+    font-family: 'Roboto Mono', monospace;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 12px 24px;
+    cursor: pointer;
+    box-shadow: 0 4px #1a252f;
+    transition: all 0.1s ease;
 }
 
 .aviator-btn:hover {
-background: #3e5871;
+    background: #3e5871;
 }
 
 .aviator-btn:active {
-box-shadow: 0 0 #1a252f;
-transform: translateY(4px);
+    box-shadow: 0 0 #1a252f;
+    transform: translateY(4px);
 }
 
-        /* NEW Style panel for Tactical Tips */
+/* Style panel for Tactical Tips */
 #debrief-panel {
-background: rgba(231, 76, 60, 0.08);
-border: 1px dashed var(--error-red);
-padding: 10px;
-margin: 10px auto 15px auto;
-width: 90%;
-border-radius: 4px;
-font-size: 13px;
-line-height: 1.4;
-text-align: left;
+    background: rgba(231, 76, 60, 0.08);
+    border: 1px dashed var(--error-red);
+    padding: 10px;
+    margin: 10px auto 15px auto;
+    width: 90%;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: left;
 }
 
 .hidden { display: none !important; }
@@ -242,47 +240,47 @@ text-align: left;
 
 <div id="screen">
 <div id="status-bar">
-<div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
-<div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
-            <div class="status-item">
-                <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
-            </div>
-<div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
+    <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
+    <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
+    <div class="status-item">
+        <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
+    </div>
+    <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
 </div>
 
 <div id="main-display">
-<div id="memorize-prompt" class="hidden">MEMORIZE DATA STRING:</div>
-<div id="word-readout">SYSTEM READY</div>
+    <div id="memorize-prompt" class="hidden">MEMORIZE DATA STRING:</div>
+    <div id="word-readout">SYSTEM READY</div>
 
-<div id="timer-zone" class="hidden">
-<div id="timer-bar-fill"></div>
-<div id="timer-digital">5S</div>
-</div>
+    <div id="timer-zone" class="hidden">
+        <div id="timer-bar-fill"></div>
+        <div id="timer-digital">5S</div>
+    </div>
 </div>
 
 <div id="control-sector">
 
-<div id="input-group" class="hidden">
-<div class="prompt-amber" style="margin-bottom: 10px;">PILOT INPUT: [RECALL MODE]</div>
-<input type="text" id="guess-input" autocomplete="off" maxlength="15">
-<br>
-<button id="submit-btn" class="aviator-btn">Enter</button>
-</div>
+    <div id="input-group" class="hidden">
+        <div class="prompt-amber" style="margin-bottom: 10px;">PILOT INPUT: [RECALL MODE]</div>
+        <input type="text" id="guess-input" autocomplete="off" maxlength="15">
+        <br>
+        <button id="submit-btn" class="aviator-btn">Enter</button>
+    </div>
 
-<div id="replay-group" class="hidden">
-<div id="feedback-text"></div>
+    <div id="replay-group" class="hidden">
+        <div id="feedback-text"></div>
 
-<div id="debrief-panel" class="hidden">
-<span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
-<span id="tip-text"></span>
-</div>
+        <div id="debrief-panel" class="hidden">
+            <span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
+            <span id="tip-text"></span>
+        </div>
 
-<button id="action-btn" class="aviator-btn">Initialize New Module</button>
-</div>
+        <button id="action-btn" class="aviator-btn">Initialize New Module</button>
+    </div>
 
-<div id="start-group">
-<button id="start-btn" class="aviator-btn">Initialize System</button>
-</div>
+    <div id="start-group">
+        <button id="start-btn" class="aviator-btn">Initialize System</button>
+    </div>
 
 </div>
 
@@ -320,154 +318,147 @@ const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
 
-    /* * Aviation/Technical Memory Tips Data Array
-     */
+/* Aviation/Technical Memory Tips Data Array - Fixed Duplicate Properties */
 const memoryTips = {
-        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM' instead of 'XFKM') to reduce working memory load.",
-        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right. Do not add predictive characters.",
-        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but in the wrong sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit or pattern in your mind to lock down the exact order.",
-        completeMismatch: "SIGNAL LOSS error. The input deviated heavily from the target. Tip: Assign structural associations. Try mentally mapping the letters into physical coordinates or recognizing if any letters clump together into familiar real-world acronyms (e.g., 'ALT', 'HDG').",
-        generic: "SCAN RATIO inadequate. Tip: Blink once right as the timer finishes to mentally 'screenshot' the optical grid before typing."
-        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
-        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
-        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
-        completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'.",
+    lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
+    lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
+    transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
+    completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'."
 };
 
 function generateRandomLetter() {
-const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
-return String.fromCharCode(charCode);
+    const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
+    return String.fromCharCode(charCode);
 }
 
 function generateMemoryString(length) {
-let tempWordArray = [];
-for (let i = 0; i < length; i++) {
-tempWordArray.push(generateRandomLetter());
-}
-return tempWordArray.join(" "); 
+    let tempWordArray = [];
+    for (let i = 0; i < length; i++) {
+        tempWordArray.push(generateRandomLetter());
+    }
+    return tempWordArray.join(" "); 
 }
 
 function pad(num) {
-return num.toString().padStart(2, '0');
+    return num.toString().padStart(2, '0');
 }
 
 function updateStatusBar() {
-levelDisplay.innerText = pad(levelCount);
-correctDisplay.innerText = pad(correct);
-incorrectDisplay.innerText = pad(incorrect);
+    levelDisplay.innerText = pad(levelCount);
+    correctDisplay.innerText = pad(correct);
+    incorrectDisplay.innerText = pad(incorrect);
 }
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function runMemorizationTimer(seconds) {
-isCountingDown = true;
-timerZone.classList.remove('hidden');
+    isCountingDown = true;
+    timerZone.classList.remove('hidden');
 
-const baseInterval_ms = (3 / levelCount) * 1000;
+    const baseInterval_ms = (3 / levelCount) * 1000;
 
-for (let i = seconds; i > 0; i--) {
-if (!isCountingDown) break; 
+    for (let i = seconds; i > 0; i--) {
+        if (!isCountingDown) break; 
 
-timerDigital.innerText = i + "S";
-const fillPercentage = (i / seconds) * 100;
-timerBar.style.width = fillPercentage + "%";
+        timerDigital.innerText = i + "S";
+        const fillPercentage = (i / seconds) * 100;
+        timerBar.style.width = fillPercentage + "%";
 
-await sleep(baseInterval_ms);
-}
+        await sleep(baseInterval_ms);
+    }
 
-isCountingDown = false;
-completeMemorizationPhase();
+    isCountingDown = false;
+    completeMemorizationPhase();
 }
 
 function completeMemorizationPhase() {
-wordReadout.innerText = "";
-wordReadout.style.opacity = 0;
-memorizePrompt.classList.add('hidden');
-timerZone.classList.add('hidden');
+    wordReadout.innerText = "";
+    wordReadout.style.opacity = 0;
+    memorizePrompt.classList.add('hidden');
+    timerZone.classList.add('hidden');
 
-inputGroup.classList.remove('hidden');
-guessInput.value = "";
-guessInput.focus();
+    inputGroup.classList.remove('hidden');
+    guessInput.value = "";
+    guessInput.focus();
 }
 
 function startRound() {
-updateStatusBar();
-startGroup.classList.add('hidden');
-inputGroup.classList.add('hidden');
-replayGroup.classList.add('hidden');
-        debriefPanel.classList.add('hidden'); // Hide tips on new round
-        debriefPanel.classList.add('hidden'); 
-wordReadout.style.opacity = 1;
-wordReadout.classList.remove('correct', 'incorrect');
-guessInput.blur();
+    updateStatusBar();
+    startGroup.classList.add('hidden');
+    inputGroup.classList.add('hidden');
+    replayGroup.classList.add('hidden');
+    debriefPanel.classList.add('hidden'); 
+    wordReadout.style.opacity = 1;
+    wordReadout.classList.remove('correct', 'incorrect');
+    guessInput.blur();
 
-timerBar.style.width = "100%";
+    timerBar.style.width = "100%";
 
-const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
+    const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
 
-currentWordString = generateMemoryString(wordLength);
-wordReadout.innerText = currentWordString;
-memorizePrompt.classList.remove('hidden');
+    currentWordString = generateMemoryString(wordLength);
+    wordReadout.innerText = currentWordString;
+    memorizePrompt.classList.remove('hidden');
 
-runMemorizationTimer(wordLength);
+    runMemorizationTimer(wordLength);
 }
 
-    // Helper logic to analyze inputs and determine the most useful tip
+// Helper logic to analyze inputs and determine the most useful tip
 function analyzeErrorType(guess, actual) {
-if (guess.length < actual.length) return memoryTips.lengthShort;
-if (guess.length > actual.length) return memoryTips.lengthLong;
+    if (guess.length < actual.length) return memoryTips.lengthShort;
+    if (guess.length > actual.length) return memoryTips.lengthLong;
 
-        // Check if characters match but are out of order (Transposition)
-let sortedGuess = guess.split('').sort().join('');
-let sortedActual = actual.split('').sort().join('');
-if (sortedGuess === sortedActual) return memoryTips.transposition;
+    // Check if characters match but are out of order (Transposition)
+    let sortedGuess = guess.split('').sort().join('');
+    let sortedActual = actual.split('').sort().join('');
+    if (sortedGuess === sortedActual) return memoryTips.transposition;
 
-        // Catch-all
-return memoryTips.completeMismatch;
+    // Catch-all
+    return memoryTips.completeMismatch;
 }
 
 function finalizeGuess() {
-if (isCountingDown) return; 
+    if (isCountingDown) return; 
 
-const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
-const actualString = currentWordString.replace(/\s/g, "");
+    const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
+    const actualString = currentWordString.replace(/\s/g, "");
 
-inputGroup.classList.add('hidden');
-wordReadout.style.opacity = 1;
+    inputGroup.classList.add('hidden');
+    wordReadout.style.opacity = 1;
 
-let feedbackHTML = "";
+    let feedbackHTML = "";
 
-if (pilotGuess === actualString) {
-wordReadout.innerText = "VALIDATED";
-wordReadout.classList.add('correct');
-feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
-correct++;
+    if (pilotGuess === actualString) {
+        wordReadout.innerText = "VALIDATED";
+        wordReadout.classList.add('correct');
+        feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
+        correct++;
 
-if (correct % 3 === 0) {
-levelCount++;
-}
-} else {
-            // Incorrect answer fork
-wordReadout.innerText = "ERROR";
-wordReadout.classList.add('incorrect');
-feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
-                           Expected: <span class="correct">${currentWordString}</span>`;
-incorrect++;
+        if (correct % 3 === 0) {
+            levelCount++;
+        }
+    } else {
+        // Incorrect answer fork
+        wordReadout.innerText = "ERROR";
+        wordReadout.classList.add('incorrect');
+        feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
+                       Expected: <span class="correct">${currentWordString}</span>`;
+        incorrect++;
 
-            // Analyze error and render relevant tactical tip
-const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
-tipText.innerText = diagnosticTip;
-debriefPanel.classList.remove('hidden');
-}
+        // Analyze error and render relevant tactical tip
+        const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
+        tipText.innerText = diagnosticTip;
+        debriefPanel.classList.remove('hidden');
+    }
 
-if (levelCount >= 10) {
-levelCount = 10;
-}
+    if (levelCount >= 10) {
+        levelCount = 10;
+    }
 
-updateStatusBar();
-const totalRounds = correct + incorrect;
-feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
-replayGroup.classList.remove('hidden');
+    updateStatusBar();
+    const totalRounds = correct + incorrect;
+    feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
+    replayGroup.classList.remove('hidden');
 }
 
 // Event Listeners
@@ -476,9 +467,9 @@ actionBtn.addEventListener('click', startRound);
 submitBtn.addEventListener('click', finalizeGuess);
 
 guessInput.addEventListener('keypress', function (e) {
-if (e.key === 'Enter') {
-finalizeGuess();
-}
+    if (e.key === 'Enter') {
+        finalizeGuess();
+    }
 });
 </script>
 
