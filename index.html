@@ -8,6 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
         :root {
+            /* Aviation Display Color Palette */
             --bg-cockpit: #0a1118;
             --panel-border: #34495e;
             --text-active: #00ffff;
@@ -39,7 +40,7 @@
             background-color: #1c2e3e;
             border: 10px solid var(--panel-border);
             border-radius: 12px;
-            width: 850px; /* Slightly widened to fit debriefing text comfortably */
+            width: 850px;
             height: 580px;
             box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             position: relative;
@@ -81,6 +82,7 @@
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 14px;
             color: var(--text-standby);
         }
@@ -88,6 +90,23 @@
         .status-item span {
             color: var(--warning-amber);
             font-weight: bold;
+        }
+
+        /* Flight Manual Link/Button Style */
+        .manual-link {
+            color: #000;
+            background-color: var(--warning-amber);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            transition: background-color 0.2s;
+        }
+
+        .manual-link:hover {
+            background-color: #f39c12;
         }
 
         #main-display {
@@ -148,7 +167,7 @@
             padding-top: 15px;
             margin-top: auto;
             text-align: center;
-            min-height: 150px; /* Enhanced to support the tactical tips */
+            min-height: 150px;
         }
 
         input[type="text"] {
@@ -193,7 +212,6 @@
             transform: translateY(4px);
         }
 
-        /* NEW Style panel for Tactical Tips */
         #debrief-panel {
             background: rgba(231, 76, 60, 0.08);
             border: 1px dashed var(--error-red);
@@ -223,6 +241,9 @@
         <div id="status-bar">
             <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
             <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
+            <div class="status-item">
+                <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
+            </div>
             <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
         </div>
 
@@ -296,14 +317,11 @@
     const submitBtn = document.getElementById('submit-btn');
     const actionBtn = document.getElementById('action-btn');
 
-    /* * Aviation/Technical Memory Tips Data Array
-     */
     const memoryTips = {
-        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM' instead of 'XFKM') to reduce working memory load.",
-        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right. Do not add predictive characters.",
-        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but in the wrong sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit or pattern in your mind to lock down the exact order.",
-        completeMismatch: "SIGNAL LOSS error. The input deviated heavily from the target. Tip: Assign structural associations. Try mentally mapping the letters into physical coordinates or recognizing if any letters clump together into familiar real-world acronyms (e.g., 'ALT', 'HDG').",
-        generic: "SCAN RATIO inadequate. Tip: Blink once right as the timer finishes to mentally 'screenshot' the optical grid before typing."
+        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
+        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
+        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
+        completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'.",
     };
 
     function generateRandomLetter() {
@@ -367,7 +385,7 @@
         startGroup.classList.add('hidden');
         inputGroup.classList.add('hidden');
         replayGroup.classList.add('hidden');
-        debriefPanel.classList.add('hidden'); // Hide tips on new round
+        debriefPanel.classList.add('hidden'); 
         wordReadout.style.opacity = 1;
         wordReadout.classList.remove('correct', 'incorrect');
         guessInput.blur();
@@ -383,17 +401,14 @@
         runMemorizationTimer(wordLength);
     }
 
-    // Helper logic to analyze inputs and determine the most useful tip
     function analyzeErrorType(guess, actual) {
         if (guess.length < actual.length) return memoryTips.lengthShort;
         if (guess.length > actual.length) return memoryTips.lengthLong;
         
-        // Check if characters match but are out of order (Transposition)
         let sortedGuess = guess.split('').sort().join('');
         let sortedActual = actual.split('').sort().join('');
         if (sortedGuess === sortedActual) return memoryTips.transposition;
         
-        // Catch-all
         return memoryTips.completeMismatch;
     }
 
@@ -418,14 +433,12 @@
                 levelCount++;
             }
         } else {
-            // Incorrect answer fork
             wordReadout.innerText = "ERROR";
             wordReadout.classList.add('incorrect');
             feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
                             Expected: <span class="correct">${currentWordString}</span>`;
             incorrect++;
 
-            // Analyze error and render relevant tactical tip
             const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
             tipText.innerText = diagnosticTip;
             debriefPanel.classList.remove('hidden');
