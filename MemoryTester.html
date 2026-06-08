@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Memory Game</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            background-color: #1e1e1e;
+            border: 2px solid #00ff00;
+            padding: 30px;
+            width: 500px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            text-align: center;
+        }
+
+        .banner {
+            border-bottom: 2px dashed #00ff00;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        #display-screen {
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            margin: 30px 0;
+            min-height: 40px;
+        }
+
+        #countdown {
+            color: #ffcc00;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        .input-area {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            background-color: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2em;
+            padding: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            outline: none;
+            width: 80%;
+        }
+
+        button {
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 8px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #00cc00;
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        .feedback-correct { color: #00ff00; }
+        .feedback-incorrect { color: #ff3333; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="banner">
+        Level <span id="level-count">1</span> - Correct: <span id="correct-count">0</span> - Incorrect: <span id="incorrect-count">0</span>
+    </div>
+
+    <div id="display-screen">Press Start to Begin</div>
+    <div id="countdown"></div>
+
+    <div id="input-zone" class="hidden">
+        <label for="guess-input">Retype the random letters in order:</label><br><br>
+        <input type="text" id="guess-input" autocomplete="off">
+        <br>
+        <button id="submit-btn">Submit</button>
+    </div>
+
+    <div id="control-zone">
+        <button id="action-btn">Start Game</button>
+    </div>
+</div>
+
+<script>
+    // Initialize variables
+    let word = [];
+    let levelCount = 1;
+    let correct = 0;
+    let incorrect = 0;
+    let currentWordString = "";
+
+    // DOM Elements
+    const levelDisplay = document.getElementById('level-count');
+    const correctDisplay = document.getElementById('correct-count');
+    const incorrectDisplay = document.getElementById('incorrect-count');
+    const displayScreen = document.getElementById('display-screen');
+    const countdownScreen = document.getElementById('countdown');
+    const inputZone = document.getElementById('input-zone');
+    const guessInput = document.getElementById('guess-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const actionBtn = document.getElementById('action-btn');
+
+    // Utility function to mimic Python's time.sleep using promises
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Generate random uppercase letters
+    function randLetter() {
+        const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
+        return String.fromCharCode(charCode);
+    }
+
+    // Populate the word array
+    function setWord(countStop) {
+        word = [];
+        for (let i = 0; i < countStop; i++) {
+            word.push(randLetter());
+        }
+        return word.join(" ");
+    }
+
+    // Core function to handle the countdown sequence
+    async function runCountdown(countStop) {
+        let timeCount = 0;
+        const sleepDuration = (3 / levelCount) * 1000; // Convert seconds to milliseconds
+
+        while (timeCount < countStop) {
+            countdownScreen.innerText = (countStop - timeCount);
+            await sleep(sleepDuration);
+            timeCount++;
+        }
+        countdownScreen.innerText = "";
+    }
+
+    // Start a new round of the game
+    async function startRound() {
+        // Hide control buttons and inputs during presentation
+        actionBtn.classList.add('hidden');
+        inputZone.classList.add('hidden');
+        guessInput.value = "";
+        
+        // Update stats banner
+        levelDisplay.innerText = levelCount;
+        correctDisplay.innerText = correct;
+        incorrectDisplay.innerText = incorrect;
+
+        // Calculate length of word: random range equivalent to random.randrange(4, 5 + levelCount)
+        const countStop = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
+        
+        // Set word and format horizontally with spaces
+        currentWordString = setWord(countStop);
+        
+        displayScreen.innerHTML = `Memorize the random letters:<br><br><span style="color: #ffffff">${currentWordString}</span>`;
+
+        // Wait for the countdown to finish
+        await runCountdown(countStop);
+
+        // "Clear" the screen and prompt for input
+        displayScreen.innerText = "";
+        inputZone.classList.remove('hidden');
+        guessInput.focus();
+    }
+
+    // Handle user's guess submission
+    function checkAnswer() {
+        const answerGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
+        const actualAnswer = currentWordString.replace(/\s/g, "");
+
+        inputZone.classList.add('hidden');
+
+        if (answerGuess === actualAnswer) {
+            displayScreen.innerHTML = '<span class="feedback-correct">Correct!</span>';
+            correct++;
+            if (correct % 3 === 0) {
+                levelCount++;
+            }
+        } else {
+            displayScreen.innerHTML = `<span class="feedback-incorrect">Incorrect!</span><br><br>The correct answer was: <span style="color: #ffffff">${currentWordString}</span>`;
+            incorrect++;
+        }
+
+        // Enforce difficulty ceiling
+        if (levelCount >= 10) {
+            levelCount = 10;
+        }
+
+        // Show score and prompt for replay
+        displayScreen.innerHTML += `<br><br>Your score is ${correct} out of ${correct + incorrect}.`;
+        
+        actionBtn.innerText = "Play Again?";
+        actionBtn.classList.remove('hidden');
+    }
+
+    // Event Listeners
+    actionBtn.addEventListener('click', startRound);
+    submitBtn.addEventListener('click', checkAnswer);
+    
+    // Allow pressing "Enter" inside the input box to submit
+    guessInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+</script>
+
+</body>
+</html>
