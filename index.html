@@ -1,43 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MFD Memory Module</title>
 <style>
-        /* Import a technical, monospaced font */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
 :root {
             /* Aviation Display Color Palette */
-            --bg-cockpit: #0a1118; /* Deep cockpit shadow */
-            --panel-border: #34495e; /* Rugged panel casing */
-            --text-active: #00ffff; /* Cyan - active data */
-            --text-data: #ffffff; /* White - standard readout */
-            --text-standby: #95a5a6; /* Grey - background info */
-            --warning-amber: #f1c40f; /* Amber - cautions/prompts */
-            --error-red: #e74c3c; /* Red - incorrect */
-            --success-green: #2ecc71; /* Green - correct */
-            --bg-cockpit: #0a1118;
-            --panel-border: #34495e;
-            --text-active: #00ffff;
-            --text-data: #ffffff;
-            --text-standby: #95a5a6;
-            --warning-amber: #f1c40f;
-            --error-red: #e74c3c;
-            --success-green: #2ecc71;
+--bg-cockpit: #0a1118;
+--panel-border: #34495e;
+--text-active: #00ffff;
+--text-data: #ffffff;
+--text-standby: #95a5a6;
+--warning-amber: #f1c40f;
+--error-red: #e74c3c;
+--success-green: #2ecc71;
 --screen-glow: rgba(0, 255, 255, 0.1);
 }
 
-@@ -37,21 +35,19 @@
+* {
+box-sizing: border-box;
+}
+
+body {
+background-color: var(--bg-cockpit);
+color: var(--text-data);
+font-family: 'Roboto Mono', monospace;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
 overflow: hidden;
 }
 
-        /* The main rugged display container */
 #efb-container {
 background-color: #1c2e3e;
 border: 10px solid var(--panel-border);
 border-radius: 12px;
-            width: 800px;
-            height: 550px;
             width: 850px; /* Slightly widened to fit debriefing text comfortably */
-            height: 580px;
+            width: 850px;
+height: 580px;
 box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
 position: relative;
 display: flex;
@@ -45,143 +50,270 @@ flex-direction: column;
 padding: 5px;
 }
 
-        /* Bezel buttons (aesthetic) */
 .bezel-button {
 position: absolute;
 background: #2c3e50;
-@@ -66,7 +62,6 @@
+border: 1px solid #1a252f;
+color: #7f8c8d;
+font-size: 10px;
+padding: 5px;
+border-radius: 4px;
+text-align: center;
+cursor: not-allowed;
+}
 .b-top { top: -35px; width: 60px; left: 50%; transform: translateX(-50%); }
 .b-left { left: -35px; top: 50%; transform: translateY(-50%) rotate(-90deg); width: 80px;}
 
-        /* The actual electronic screen area */
 #screen {
 background: black;
 flex-grow: 1;
-@@ -80,7 +75,6 @@
+border: 2px solid #000;
+border-radius: 4px;
+position: relative;
+box-shadow: inset 0 0 50px var(--screen-glow);
+display: flex;
+flex-direction: column;
+padding: 20px;
 overflow: hidden;
 }
 
-        /* SYSTEM STATUS BAR */
 #status-bar {
 border-bottom: 2px solid var(--panel-border);
 padding-bottom: 10px;
-@@ -96,7 +90,6 @@
+margin-bottom: 20px;
+display: flex;
+justify-content: space-between;
+            align-items: center;
+font-size: 14px;
+color: var(--text-standby);
+}
+
+.status-item span {
+color: var(--warning-amber);
 font-weight: bold;
 }
 
-        /* MAIN DISPLAY AREA */
+        /* Flight Manual Link/Button Style */
+        .manual-link {
+            color: #000;
+            background-color: var(--warning-amber);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            transition: background-color 0.2s;
+        }
+
+        .manual-link:hover {
+            background-color: #f39c12;
+        }
+
 #main-display {
 flex-grow: 1;
 display: flex;
-@@ -112,7 +105,6 @@
+flex-direction: column;
+justify-content: center;
+align-items: center;
+position: relative;
+}
+
+#memorize-prompt {
+color: var(--text-standby);
+font-size: 18px;
 margin-bottom: 10px;
 }
 
-        /* The Random Word Output */
 #word-readout {
 font-size: 64px;
 letter-spacing: 15px;
-@@ -123,7 +115,6 @@
+color: var(--text-active);
+text-shadow: 0 0 10px var(--text-active);
+min-height: 80px;
+text-align: center;
 transition: opacity 0.2s ease;
 }
 
-        /* HORIZONTAL TIMER BAR (Moved below letters) */
 #timer-zone {
 position: relative;
 width: 450px;
-@@ -137,7 +128,7 @@
+height: 14px;
+border: 2px solid var(--panel-border);
+background: rgba(0, 0, 0, 0.6);
+margin-top: 25px;
+padding: 2px;
+}
+
 #timer-bar-fill {
 background-color: var(--text-active);
 height: 100%;
-            width: 100%; /* Default starting state */
-            width: 100%;
+width: 100%;
 transition: width 0.1s linear;
 }
 
-@@ -152,16 +143,14 @@
+#timer-digital {
+position: absolute;
+bottom: -25px;
+left: 50%;
+transform: translateX(-50%);
+color: var(--warning-amber);
+font-weight: bold;
+font-size: 14px;
 letter-spacing: 1px;
 }
 
-        /* CONTROL / INPUT AREA */
 #control-sector {
 border-top: 1px solid var(--panel-border);
 padding-top: 15px;
 margin-top: auto;
 text-align: center;
-            min-height: 120px;
             min-height: 150px; /* Enhanced to support the tactical tips */
+            min-height: 150px;
 }
 
-        /* Pilots Input Field */
 input[type="text"] {
 background-color: transparent;
 border: 2px solid var(--panel-border);
-@@ -181,7 +170,6 @@
+color: var(--text-active);
+font-family: 'Roboto Mono', monospace;
+font-size: 24px;
+padding: 10px;
+width: 300px;
+text-align: center;
+text-transform: uppercase;
+outline: none;
+margin-bottom: 10px;
+transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
 border-color: var(--text-active);
 }
 
-        /* ACTION BUTTONS (Start/Submit/Play Again) */
 .aviator-btn {
 background: #2c3e50;
 border: 1px solid var(--panel-border);
-@@ -205,7 +193,19 @@
+color: var(--text-data);
+font-family: 'Roboto Mono', monospace;
+text-transform: uppercase;
+font-weight: bold;
+font-size: 16px;
+padding: 12px 24px;
+cursor: pointer;
+box-shadow: 0 4px #1a252f;
+transition: all 0.1s ease;
+}
+
+.aviator-btn:hover {
+background: #3e5871;
+}
+
+.aviator-btn:active {
+box-shadow: 0 0 #1a252f;
 transform: translateY(4px);
 }
 
-        /* UTILITY CLASSES */
         /* NEW Style panel for Tactical Tips */
-        #debrief-panel {
-            background: rgba(231, 76, 60, 0.08);
-            border: 1px dashed var(--error-red);
-            padding: 10px;
-            margin: 10px auto 15px auto;
-            width: 90%;
-            border-radius: 4px;
-            font-size: 13px;
-            line-height: 1.4;
-            text-align: left;
-        }
+#debrief-panel {
+background: rgba(231, 76, 60, 0.08);
+border: 1px dashed var(--error-red);
+padding: 10px;
+margin: 10px auto 15px auto;
+width: 90%;
+border-radius: 4px;
+font-size: 13px;
+line-height: 1.4;
+text-align: left;
+}
 
 .hidden { display: none !important; }
 .correct { color: var(--success-green) !important; }
 .incorrect { color: var(--error-red) !important; }
-@@ -220,7 +220,6 @@
+.prompt-amber { color: var(--warning-amber) !important; }
+
+</style>
+</head>
+<body>
+
+<div id="efb-container">
+<div class="bezel-button b-top">POWER</div>
 <div class="bezel-button b-left">BRT ADJ</div>
 
 <div id="screen">
-        
 <div id="status-bar">
 <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
 <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
-@@ -247,7 +246,13 @@
+            <div class="status-item">
+                <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
+            </div>
+<div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
+</div>
+
+<div id="main-display">
+<div id="memorize-prompt" class="hidden">MEMORIZE DATA STRING:</div>
+<div id="word-readout">SYSTEM READY</div>
+
+<div id="timer-zone" class="hidden">
+<div id="timer-bar-fill"></div>
+<div id="timer-digital">5S</div>
+</div>
+</div>
+
+<div id="control-sector">
+
+<div id="input-group" class="hidden">
+<div class="prompt-amber" style="margin-bottom: 10px;">PILOT INPUT: [RECALL MODE]</div>
+<input type="text" id="guess-input" autocomplete="off" maxlength="15">
+<br>
+<button id="submit-btn" class="aviator-btn">Enter</button>
 </div>
 
 <div id="replay-group" class="hidden">
-                <div id="feedback-text" style="margin-bottom: 15px;"></div>
-                <div id="feedback-text"></div>
-                
-                <div id="debrief-panel" class="hidden">
-                    <span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
-                    <span id="tip-text"></span>
-                </div>
+<div id="feedback-text"></div>
+
+<div id="debrief-panel" class="hidden">
+<span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
+<span id="tip-text"></span>
+</div>
 
 <button id="action-btn" class="aviator-btn">Initialize New Module</button>
 </div>
 
-@@ -261,7 +266,6 @@
+<div id="start-group">
+<button id="start-btn" class="aviator-btn">Initialize System</button>
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script>
-    // Initialize state variables
 let levelCount = 1;
 let correct = 0;
 let incorrect = 0;
-@@ -284,12 +288,24 @@
+let currentWordString = "";
+let isCountingDown = false;
+
+// DOM Element References
+const levelDisplay = document.getElementById('level-count');
+const correctDisplay = document.getElementById('correct-count');
+const incorrectDisplay = document.getElementById('incorrect-count');
+const wordReadout = document.getElementById('word-readout');
+const memorizePrompt = document.getElementById('memorize-prompt');
+const guessInput = document.getElementById('guess-input');
+
+// Zones/Groups
+const timerZone = document.getElementById('timer-zone');
+const timerBar = document.getElementById('timer-bar-fill');
+const timerDigital = document.getElementById('timer-digital');
+const startGroup = document.getElementById('start-group');
 const inputGroup = document.getElementById('input-group');
 const replayGroup = document.getElementById('replay-group');
 const feedbackText = document.getElementById('feedback-text');
-    const debriefPanel = document.getElementById('debrief-panel');
-    const tipText = document.getElementById('tip-text');
+const debriefPanel = document.getElementById('debrief-panel');
+const tipText = document.getElementById('tip-text');
 
 // Buttons
 const startBtn = document.getElementById('start-btn');
@@ -190,63 +322,128 @@ const actionBtn = document.getElementById('action-btn');
 
     /* * Aviation/Technical Memory Tips Data Array
      */
-    const memoryTips = {
+const memoryTips = {
         lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM' instead of 'XFKM') to reduce working memory load.",
         lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right. Do not add predictive characters.",
         transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but in the wrong sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit or pattern in your mind to lock down the exact order.",
         completeMismatch: "SIGNAL LOSS error. The input deviated heavily from the target. Tip: Assign structural associations. Try mentally mapping the letters into physical coordinates or recognizing if any letters clump together into familiar real-world acronyms (e.g., 'ALT', 'HDG').",
         generic: "SCAN RATIO inadequate. Tip: Blink once right as the timer finishes to mentally 'screenshot' the optical grid before typing."
-    };
+        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
+        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
+        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
+        completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'.",
+};
 
 function generateRandomLetter() {
 const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
 return String.fromCharCode(charCode);
-@@ -324,10 +340,7 @@
+}
+
+function generateMemoryString(length) {
+let tempWordArray = [];
+for (let i = 0; i < length; i++) {
+tempWordArray.push(generateRandomLetter());
+}
+return tempWordArray.join(" "); 
+}
+
+function pad(num) {
+return num.toString().padStart(2, '0');
+}
+
+function updateStatusBar() {
+levelDisplay.innerText = pad(levelCount);
+correctDisplay.innerText = pad(correct);
+incorrectDisplay.innerText = pad(incorrect);
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function runMemorizationTimer(seconds) {
+isCountingDown = true;
+timerZone.classList.remove('hidden');
+
+const baseInterval_ms = (3 / levelCount) * 1000;
+
 for (let i = seconds; i > 0; i--) {
 if (!isCountingDown) break; 
 
-            // Update digital display string
 timerDigital.innerText = i + "S";
-            
-            // Modified to scale horizontally via width property
 const fillPercentage = (i / seconds) * 100;
 timerBar.style.width = fillPercentage + "%";
 
-@@ -354,11 +367,11 @@
+await sleep(baseInterval_ms);
+}
+
+isCountingDown = false;
+completeMemorizationPhase();
+}
+
+function completeMemorizationPhase() {
+wordReadout.innerText = "";
+wordReadout.style.opacity = 0;
+memorizePrompt.classList.add('hidden');
+timerZone.classList.add('hidden');
+
+inputGroup.classList.remove('hidden');
+guessInput.value = "";
+guessInput.focus();
+}
+
+function startRound() {
+updateStatusBar();
 startGroup.classList.add('hidden');
 inputGroup.classList.add('hidden');
 replayGroup.classList.add('hidden');
         debriefPanel.classList.add('hidden'); // Hide tips on new round
+        debriefPanel.classList.add('hidden'); 
 wordReadout.style.opacity = 1;
 wordReadout.classList.remove('correct', 'incorrect');
 guessInput.blur();
 
-        // Establish full bar width constraint before timer reduction starts
 timerBar.style.width = "100%";
 
 const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
-@@ -370,6 +383,20 @@
+
+currentWordString = generateMemoryString(wordLength);
+wordReadout.innerText = currentWordString;
+memorizePrompt.classList.remove('hidden');
+
 runMemorizationTimer(wordLength);
 }
 
     // Helper logic to analyze inputs and determine the most useful tip
-    function analyzeErrorType(guess, actual) {
-        if (guess.length < actual.length) return memoryTips.lengthShort;
-        if (guess.length > actual.length) return memoryTips.lengthLong;
-        
+function analyzeErrorType(guess, actual) {
+if (guess.length < actual.length) return memoryTips.lengthShort;
+if (guess.length > actual.length) return memoryTips.lengthLong;
+
         // Check if characters match but are out of order (Transposition)
-        let sortedGuess = guess.split('').sort().join('');
-        let sortedActual = actual.split('').sort().join('');
-        if (sortedGuess === sortedActual) return memoryTips.transposition;
-        
+let sortedGuess = guess.split('').sort().join('');
+let sortedActual = actual.split('').sort().join('');
+if (sortedGuess === sortedActual) return memoryTips.transposition;
+
         // Catch-all
-        return memoryTips.completeMismatch;
-    }
+return memoryTips.completeMismatch;
+}
 
 function finalizeGuess() {
 if (isCountingDown) return; 
 
-@@ -391,11 +418,17 @@
+const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
+const actualString = currentWordString.replace(/\s/g, "");
+
+inputGroup.classList.add('hidden');
+wordReadout.style.opacity = 1;
+
+let feedbackHTML = "";
+
+if (pilotGuess === actualString) {
+wordReadout.innerText = "VALIDATED";
+wordReadout.classList.add('correct');
+feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
+correct++;
+
+if (correct % 3 === 0) {
 levelCount++;
 }
 } else {
@@ -258,17 +455,32 @@ feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
 incorrect++;
 
             // Analyze error and render relevant tactical tip
-            const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
-            tipText.innerText = diagnosticTip;
-            debriefPanel.classList.remove('hidden');
+const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
+tipText.innerText = diagnosticTip;
+debriefPanel.classList.remove('hidden');
 }
 
 if (levelCount >= 10) {
-@@ -404,7 +437,7 @@
+levelCount = 10;
+}
 
 updateStatusBar();
 const totalRounds = correct + incorrect;
-        feedbackText.innerHTML = `${feedbackHTML}<br><br>Current Session Score: ${correct}/${totalRounds}`;
-        feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
+feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
 replayGroup.classList.remove('hidden');
 }
+
+// Event Listeners
+startBtn.addEventListener('click', startRound);
+actionBtn.addEventListener('click', startRound);
+submitBtn.addEventListener('click', finalizeGuess);
+
+guessInput.addEventListener('keypress', function (e) {
+if (e.key === 'Enter') {
+finalizeGuess();
+}
+});
+</script>
+
+</body>
+</html>
