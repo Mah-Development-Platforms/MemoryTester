@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFD Flight Manual - Memory Strategies</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
+
+        :root {
+            /* Identical Glass Cockpit Palette */
+            --bg-cockpit: #0a1118;
+            --panel-border: #34495e;
+            --text-active: #00ffff;
+            --text-data: #ffffff;
+            --text-standby: #95a5a6;
+            --warning-amber: #f1c40f;
+            --success-green: #2ecc71;
+            --screen-glow: rgba(0, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-cockpit);
+            color: var(--text-data);
+            font-family: 'Roboto Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Matches the main game chassis dimensions and styling */
+        #efb-container {
+            background-color: #1c2e3e;
+            border: 10px solid var(--panel-border);
+            border-radius: 12px;
+            width: 850px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        #screen {
+            background: black;
+            border: 2px solid #000;
+            border-radius: 4px;
+            box-shadow: inset 0 0 50px var(--screen-glow);
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+
+        /* SYSTEM STATUS BAR */
+        #status-bar {
+            border-bottom: 2px solid var(--panel-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-standby);
+        }
+
+        .status-item span {
+            color: var(--warning-amber);
+            font-weight: bold;
+        }
+
+        /* DOCUMENT CONTENTS */
+        h1 {
+            color: var(--text-active);
+            font-size: 22px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--warning-amber);
+            font-size: 13px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .strategy-card {
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .strategy-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed var(--panel-border);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .strategy-title {
+            color: var(--text-active);
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .strategy-meta {
+            color: var(--warning-amber);
+            font-size: 12px;
+        }
+
+        .strategy-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-data);
+            margin-bottom: 10px;
+        }
+
+        .tech-example {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--success-green);
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .tech-example span {
+            color: var(--text-standby);
+        }
+
+        /* COMPARATIVE MATRIX TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        th, td {
+            border: 1px solid var(--panel-border);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(52, 73, 94, 0.4);
+            color: var(--text-active);
+            text-transform: uppercase;
+        }
+
+        /* CONTROL SECTOR / NAVIGATION */
+        #control-sector {
+            border-top: 1px solid var(--panel-border);
+            padding-top: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .aviator-btn {
+            background: #2c3e50;
+            border: 1px solid var(--panel-border);
+            color: var(--text-data);
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 0 4px #1a252f;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .aviator-btn:hover {
+            background: #3e5871;
+        }
+
+        .aviator-btn:active {
+            box-shadow: 0 0 #1a252f;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+<body>
+
+<div id="efb-container">
+    <div id="screen">
+        
+        <div id="status-bar">
+            <div class="status-item">SYS DOCS: <span>ONLINE</span></div>
+            <div class="status-item">REF: FLIGHT_MANUAL_07</div>
+            <div class="status-item">SEC: <span>COGNITIVE TRAINING</span></div>
+        </div>
+
+        <h1>Memory Optimization Protocol</h1>
+        <div class="subtitle">Standard Operating Procedures for Technical Data Retention</div>
+
+        <div class="strategy-card">
+            <div class="strategy-header">
+                <div class="strategy-title">01. Rhythmic & Phonetic Grouping</div>
+                <div class="strategy-meta">Target: Phonological Loop</div>
+            </div>
+            <div class="strategy-desc">
+                Do not ingest data as static, flat variables. Force incoming string sequences into a dynamic auditory cadence or musical time signature. By breaking continuous feeds down into rhythmic metrics, you offload processing onto brain centers optimized for pattern recognition.
+            </div>
+            <div class="tech-example">
+                <strong>INPUT DATA:</strong> M R L T B P Q &nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp; 
+                <strong>TACTICAL ENCODING:</strong> <span style="color: var(--text-active);">"M-R-L... [pause]... T-B-P... [pause]... Q!"</span>
+            </div>
+        </div>
+
+        <div class="strategy-card">
+            <div class="strategy-header">
+                <div class="strategy-title">02. NATO Phonetic Translation</div>
+                <div class="strategy-meta">Target: Acoustic Clarification</div>
+            </div>
+            <div class="strategy-desc">
+                High-stress environments introduce data decay where rhyming letters (B, C, D, P, T) degrade and corrupt. Instantly translate volatile symbols into distinct, multi-syllable tactical aviation equivalents to eliminate audio bleeding.
+            </div>
+            <div class="tech-example">
+                <strong>INPUT DATA:</strong> B P X D &nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp; 
+                <strong>TACTICAL ENCODING:</strong> <span style="color: var(--text-active);">"Bravo... Papa... X-ray... Delta"</span>
+            </div>
+        </div>
+
+        <div class="strategy-card">
+            <div class="strategy-header">
+                <div class="strategy-title">03. Visuospatial Geometry</div>
+                <div class="strategy-meta">Target: Spatial Sketchpad</div>
+            </div>
+            <div class="strategy-desc">
+                Bypass linguistic pathways entirely. Treat the alphanumeric grid display or your physical hardware interface (keyboard layout) as a structural waypoint system. Map a line or kinetic gesture connecting the targets in physical dimensions.
+            </div>
+            <div class="tech-example">
+                <strong>INPUT DATA:</strong> Q A Z X &nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp; 
+                <strong>TACTICAL ENCODING:</strong> <span style="color: var(--text-active);">[Trace vertical left column downwards, then slide diagonal right]</span>
+            </div>
+        </div>
+
+        <div class="strategy-card">
+            <div class="strategy-header">
+                <div class="strategy-title">04. Pseudoword Synthesis</div>
+                <div class="strategy-meta">Target: Long-Term Semantics</div>
+            </div>
+            <div class="strategy-desc">
+                Aggressively force artificial vowels between target consonants to synthesize a faux pronounceable word. Compression algorithms prove that keeping one semantic entity inside short-term processing caches uses 75% less energy than storing four fragmented nodes.
+            </div>
+            <div class="tech-example">
+                <strong>INPUT DATA:</strong> K N S P &nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp; 
+                <strong>TACTICAL ENCODING:</strong> <span style="color: var(--text-active);">"KiN-ShiP" (Store as single token)</span>
+            </div>
+        </div>
+
+        <h2 style="color: var(--text-active); font-size: 14px; margin: 15px 0 5px 0; text-transform: uppercase;">Efficiency Routing Matrix</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Protocol</th>
+                    <th>Optimal Range</th>
+                    <th>Cognitive Benefit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Acoustic Rhythms</td>
+                    <td>Levels 01 - 04 (Short Data)</td>
+                    <td>High speed execution under rapid countdown drop-offs.</td>
+                </tr>
+                <tr>
+                    <td>Phonetic Alphabet</td>
+                    <td>All Levels (Variable Input)</td>
+                    <td>Absolute defense against auditory blurring/rhyming noise.</td>
+                </tr>
+                <tr>
+                    <td>Spatial Mapping</td>
+                    <td>Complex Spatial Arrays</td>
+                    <td>Linguistic centers remain dark; utilizes purely visual tracking.</td>
+                </tr>
+                <tr>
+                    <td>Pseudowording</td>
+                    <td>Levels 05+ (Heavy Arrays)</td>
+                    <td>Compresses large token footprints down to single structures.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="control-sector">
+            <a href="index.html" class="aviator-btn">&lt;&lt; Return to Active Display Module</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
