@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MFD Memory Module</title>
-<style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
 :root {
@@ -12,31 +5,7 @@
 --bg-cockpit: #0a1118;
 --panel-border: #34495e;
 --text-active: #00ffff;
---text-data: #ffffff;
---text-standby: #95a5a6;
---warning-amber: #f1c40f;
---error-red: #e74c3c;
---success-green: #2ecc71;
---screen-glow: rgba(0, 255, 255, 0.1);
-}
-
-* {
-box-sizing: border-box;
-}
-
-body {
-background-color: var(--bg-cockpit);
-color: var(--text-data);
-font-family: 'Roboto Mono', monospace;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-overflow: hidden;
-}
-
-#efb-container {
+@@ -39,7 +40,7 @@
 background-color: #1c2e3e;
 border: 10px solid var(--panel-border);
 border-radius: 12px;
@@ -45,41 +14,7 @@ border-radius: 12px;
 height: 580px;
 box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
 position: relative;
-display: flex;
-flex-direction: column;
-padding: 5px;
-}
-
-.bezel-button {
-position: absolute;
-background: #2c3e50;
-border: 1px solid #1a252f;
-color: #7f8c8d;
-font-size: 10px;
-padding: 5px;
-border-radius: 4px;
-text-align: center;
-cursor: not-allowed;
-}
-.b-top { top: -35px; width: 60px; left: 50%; transform: translateX(-50%); }
-.b-left { left: -35px; top: 50%; transform: translateY(-50%) rotate(-90deg); width: 80px;}
-
-#screen {
-background: black;
-flex-grow: 1;
-border: 2px solid #000;
-border-radius: 4px;
-position: relative;
-box-shadow: inset 0 0 50px var(--screen-glow);
-display: flex;
-flex-direction: column;
-padding: 20px;
-overflow: hidden;
-}
-
-#status-bar {
-border-bottom: 2px solid var(--panel-border);
-padding-bottom: 10px;
+@@ -81,6 +82,7 @@
 margin-bottom: 20px;
 display: flex;
 justify-content: space-between;
@@ -87,9 +22,7 @@ justify-content: space-between;
 font-size: 14px;
 color: var(--text-standby);
 }
-
-.status-item span {
-color: var(--warning-amber);
+@@ -90,6 +92,23 @@
 font-weight: bold;
 }
 
@@ -113,58 +46,7 @@ font-weight: bold;
 #main-display {
 flex-grow: 1;
 display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-position: relative;
-}
-
-#memorize-prompt {
-color: var(--text-standby);
-font-size: 18px;
-margin-bottom: 10px;
-}
-
-#word-readout {
-font-size: 64px;
-letter-spacing: 15px;
-color: var(--text-active);
-text-shadow: 0 0 10px var(--text-active);
-min-height: 80px;
-text-align: center;
-transition: opacity 0.2s ease;
-}
-
-#timer-zone {
-position: relative;
-width: 450px;
-height: 14px;
-border: 2px solid var(--panel-border);
-background: rgba(0, 0, 0, 0.6);
-margin-top: 25px;
-padding: 2px;
-}
-
-#timer-bar-fill {
-background-color: var(--text-active);
-height: 100%;
-width: 100%;
-transition: width 0.1s linear;
-}
-
-#timer-digital {
-position: absolute;
-bottom: -25px;
-left: 50%;
-transform: translateX(-50%);
-color: var(--warning-amber);
-font-weight: bold;
-font-size: 14px;
-letter-spacing: 1px;
-}
-
-#control-sector {
-border-top: 1px solid var(--panel-border);
+@@ -148,7 +167,7 @@
 padding-top: 15px;
 margin-top: auto;
 text-align: center;
@@ -173,44 +55,7 @@ text-align: center;
 }
 
 input[type="text"] {
-background-color: transparent;
-border: 2px solid var(--panel-border);
-color: var(--text-active);
-font-family: 'Roboto Mono', monospace;
-font-size: 24px;
-padding: 10px;
-width: 300px;
-text-align: center;
-text-transform: uppercase;
-outline: none;
-margin-bottom: 10px;
-transition: border-color 0.3s;
-}
-
-input[type="text"]:focus {
-border-color: var(--text-active);
-}
-
-.aviator-btn {
-background: #2c3e50;
-border: 1px solid var(--panel-border);
-color: var(--text-data);
-font-family: 'Roboto Mono', monospace;
-text-transform: uppercase;
-font-weight: bold;
-font-size: 16px;
-padding: 12px 24px;
-cursor: pointer;
-box-shadow: 0 4px #1a252f;
-transition: all 0.1s ease;
-}
-
-.aviator-btn:hover {
-background: #3e5871;
-}
-
-.aviator-btn:active {
-box-shadow: 0 0 #1a252f;
+@@ -193,7 +212,6 @@
 transform: translateY(4px);
 }
 
@@ -218,29 +63,7 @@ transform: translateY(4px);
 #debrief-panel {
 background: rgba(231, 76, 60, 0.08);
 border: 1px dashed var(--error-red);
-padding: 10px;
-margin: 10px auto 15px auto;
-width: 90%;
-border-radius: 4px;
-font-size: 13px;
-line-height: 1.4;
-text-align: left;
-}
-
-.hidden { display: none !important; }
-.correct { color: var(--success-green) !important; }
-.incorrect { color: var(--error-red) !important; }
-.prompt-amber { color: var(--warning-amber) !important; }
-
-</style>
-</head>
-<body>
-
-<div id="efb-container">
-<div class="bezel-button b-top">POWER</div>
-<div class="bezel-button b-left">BRT ADJ</div>
-
-<div id="screen">
+@@ -223,6 +241,9 @@
 <div id="status-bar">
 <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
 <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
@@ -250,73 +73,7 @@ text-align: left;
 <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
 </div>
 
-<div id="main-display">
-<div id="memorize-prompt" class="hidden">MEMORIZE DATA STRING:</div>
-<div id="word-readout">SYSTEM READY</div>
-
-<div id="timer-zone" class="hidden">
-<div id="timer-bar-fill"></div>
-<div id="timer-digital">5S</div>
-</div>
-</div>
-
-<div id="control-sector">
-
-<div id="input-group" class="hidden">
-<div class="prompt-amber" style="margin-bottom: 10px;">PILOT INPUT: [RECALL MODE]</div>
-<input type="text" id="guess-input" autocomplete="off" maxlength="15">
-<br>
-<button id="submit-btn" class="aviator-btn">Enter</button>
-</div>
-
-<div id="replay-group" class="hidden">
-<div id="feedback-text"></div>
-
-<div id="debrief-panel" class="hidden">
-<span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
-<span id="tip-text"></span>
-</div>
-
-<button id="action-btn" class="aviator-btn">Initialize New Module</button>
-</div>
-
-<div id="start-group">
-<button id="start-btn" class="aviator-btn">Initialize System</button>
-</div>
-
-</div>
-
-</div>
-</div>
-
-<script>
-let levelCount = 1;
-let correct = 0;
-let incorrect = 0;
-let currentWordString = "";
-let isCountingDown = false;
-
-// DOM Element References
-const levelDisplay = document.getElementById('level-count');
-const correctDisplay = document.getElementById('correct-count');
-const incorrectDisplay = document.getElementById('incorrect-count');
-const wordReadout = document.getElementById('word-readout');
-const memorizePrompt = document.getElementById('memorize-prompt');
-const guessInput = document.getElementById('guess-input');
-
-// Zones/Groups
-const timerZone = document.getElementById('timer-zone');
-const timerBar = document.getElementById('timer-bar-fill');
-const timerDigital = document.getElementById('timer-digital');
-const startGroup = document.getElementById('start-group');
-const inputGroup = document.getElementById('input-group');
-const replayGroup = document.getElementById('replay-group');
-const feedbackText = document.getElementById('feedback-text');
-const debriefPanel = document.getElementById('debrief-panel');
-const tipText = document.getElementById('tip-text');
-
-// Buttons
-const startBtn = document.getElementById('start-btn');
+@@ -296,14 +317,11 @@
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
 
@@ -335,63 +92,7 @@ const memoryTips = {
 };
 
 function generateRandomLetter() {
-const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
-return String.fromCharCode(charCode);
-}
-
-function generateMemoryString(length) {
-let tempWordArray = [];
-for (let i = 0; i < length; i++) {
-tempWordArray.push(generateRandomLetter());
-}
-return tempWordArray.join(" "); 
-}
-
-function pad(num) {
-return num.toString().padStart(2, '0');
-}
-
-function updateStatusBar() {
-levelDisplay.innerText = pad(levelCount);
-correctDisplay.innerText = pad(correct);
-incorrectDisplay.innerText = pad(incorrect);
-}
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-async function runMemorizationTimer(seconds) {
-isCountingDown = true;
-timerZone.classList.remove('hidden');
-
-const baseInterval_ms = (3 / levelCount) * 1000;
-
-for (let i = seconds; i > 0; i--) {
-if (!isCountingDown) break; 
-
-timerDigital.innerText = i + "S";
-const fillPercentage = (i / seconds) * 100;
-timerBar.style.width = fillPercentage + "%";
-
-await sleep(baseInterval_ms);
-}
-
-isCountingDown = false;
-completeMemorizationPhase();
-}
-
-function completeMemorizationPhase() {
-wordReadout.innerText = "";
-wordReadout.style.opacity = 0;
-memorizePrompt.classList.add('hidden');
-timerZone.classList.add('hidden');
-
-inputGroup.classList.remove('hidden');
-guessInput.value = "";
-guessInput.focus();
-}
-
-function startRound() {
-updateStatusBar();
+@@ -367,7 +385,7 @@
 startGroup.classList.add('hidden');
 inputGroup.classList.add('hidden');
 replayGroup.classList.add('hidden');
@@ -400,15 +101,7 @@ replayGroup.classList.add('hidden');
 wordReadout.style.opacity = 1;
 wordReadout.classList.remove('correct', 'incorrect');
 guessInput.blur();
-
-timerBar.style.width = "100%";
-
-const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
-
-currentWordString = generateMemoryString(wordLength);
-wordReadout.innerText = currentWordString;
-memorizePrompt.classList.remove('hidden');
-
+@@ -383,17 +401,14 @@
 runMemorizationTimer(wordLength);
 }
 
@@ -426,24 +119,7 @@ if (sortedGuess === sortedActual) return memoryTips.transposition;
 return memoryTips.completeMismatch;
 }
 
-function finalizeGuess() {
-if (isCountingDown) return; 
-
-const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
-const actualString = currentWordString.replace(/\s/g, "");
-
-inputGroup.classList.add('hidden');
-wordReadout.style.opacity = 1;
-
-let feedbackHTML = "";
-
-if (pilotGuess === actualString) {
-wordReadout.innerText = "VALIDATED";
-wordReadout.classList.add('correct');
-feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
-correct++;
-
-if (correct % 3 === 0) {
+@@ -418,14 +433,12 @@
 levelCount++;
 }
 } else {
@@ -458,29 +134,3 @@ incorrect++;
 const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
 tipText.innerText = diagnosticTip;
 debriefPanel.classList.remove('hidden');
-}
-
-if (levelCount >= 10) {
-levelCount = 10;
-}
-
-updateStatusBar();
-const totalRounds = correct + incorrect;
-feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
-replayGroup.classList.remove('hidden');
-}
-
-// Event Listeners
-startBtn.addEventListener('click', startRound);
-actionBtn.addEventListener('click', startRound);
-submitBtn.addEventListener('click', finalizeGuess);
-
-guessInput.addEventListener('keypress', function (e) {
-if (e.key === 'Enter') {
-finalizeGuess();
-}
-});
-</script>
-
-</body>
-</html>
