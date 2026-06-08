@@ -1,125 +1,252 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MFD Memory Module</title>
+<style>
+        /* Import a technical, monospaced font */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght=400;700&display=swap');
 
 :root {
             /* Aviation Display Color Palette */
---bg-cockpit: #0a1118;
---panel-border: #34495e;
---text-active: #00ffff;
-@@ -39,7 +40,7 @@
+            --bg-cockpit: #0a1118; /* Deep cockpit shadow */
+            --panel-border: #34495e; /* Rugged panel casing */
+            --text-active: #00ffff; /* Cyan - active data */
+            --text-data: #ffffff; /* White - standard readout */
+            --text-standby: #95a5a6; /* Grey - background info */
+            --warning-amber: #f1c40f; /* Amber - cautions/prompts */
+            --error-red: #e74c3c; /* Red - incorrect */
+            --success-green: #2ecc71; /* Green - correct */
+            --bg-cockpit: #0a1118;
+            --panel-border: #34495e;
+            --text-active: #00ffff;
+            --text-data: #ffffff;
+            --text-standby: #95a5a6;
+            --warning-amber: #f1c40f;
+            --error-red: #e74c3c;
+            --success-green: #2ecc71;
+--screen-glow: rgba(0, 255, 255, 0.1);
+}
+
+@@ -37,21 +35,19 @@
+overflow: hidden;
+}
+
+        /* The main rugged display container */
+#efb-container {
 background-color: #1c2e3e;
 border: 10px solid var(--panel-border);
 border-radius: 12px;
+            width: 800px;
+            height: 550px;
             width: 850px; /* Slightly widened to fit debriefing text comfortably */
-            width: 850px;
-height: 580px;
+            height: 580px;
 box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
 position: relative;
-@@ -81,6 +82,7 @@
-margin-bottom: 20px;
 display: flex;
-justify-content: space-between;
-            align-items: center;
-font-size: 14px;
-color: var(--text-standby);
+flex-direction: column;
+padding: 5px;
 }
-@@ -90,6 +92,23 @@
+
+        /* Bezel buttons (aesthetic) */
+.bezel-button {
+position: absolute;
+background: #2c3e50;
+@@ -66,7 +62,6 @@
+.b-top { top: -35px; width: 60px; left: 50%; transform: translateX(-50%); }
+.b-left { left: -35px; top: 50%; transform: translateY(-50%) rotate(-90deg); width: 80px;}
+
+        /* The actual electronic screen area */
+#screen {
+background: black;
+flex-grow: 1;
+@@ -80,7 +75,6 @@
+overflow: hidden;
+}
+
+        /* SYSTEM STATUS BAR */
+#status-bar {
+border-bottom: 2px solid var(--panel-border);
+padding-bottom: 10px;
+@@ -96,7 +90,6 @@
 font-weight: bold;
 }
 
-        /* Flight Manual Link/Button Style */
-        .manual-link {
-            color: #000;
-            background-color: var(--warning-amber);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 3px;
-            text-transform: uppercase;
-            transition: background-color 0.2s;
-        }
-
-        .manual-link:hover {
-            background-color: #f39c12;
-        }
-
+        /* MAIN DISPLAY AREA */
 #main-display {
 flex-grow: 1;
 display: flex;
-@@ -148,7 +167,7 @@
+@@ -112,7 +105,6 @@
+margin-bottom: 10px;
+}
+
+        /* The Random Word Output */
+#word-readout {
+font-size: 64px;
+letter-spacing: 15px;
+@@ -123,7 +115,6 @@
+transition: opacity 0.2s ease;
+}
+
+        /* HORIZONTAL TIMER BAR (Moved below letters) */
+#timer-zone {
+position: relative;
+width: 450px;
+@@ -137,7 +128,7 @@
+#timer-bar-fill {
+background-color: var(--text-active);
+height: 100%;
+            width: 100%; /* Default starting state */
+            width: 100%;
+transition: width 0.1s linear;
+}
+
+@@ -152,16 +143,14 @@
+letter-spacing: 1px;
+}
+
+        /* CONTROL / INPUT AREA */
+#control-sector {
+border-top: 1px solid var(--panel-border);
 padding-top: 15px;
 margin-top: auto;
 text-align: center;
+            min-height: 120px;
             min-height: 150px; /* Enhanced to support the tactical tips */
-            min-height: 150px;
 }
 
+        /* Pilots Input Field */
 input[type="text"] {
-@@ -193,7 +212,6 @@
+background-color: transparent;
+border: 2px solid var(--panel-border);
+@@ -181,7 +170,6 @@
+border-color: var(--text-active);
+}
+
+        /* ACTION BUTTONS (Start/Submit/Play Again) */
+.aviator-btn {
+background: #2c3e50;
+border: 1px solid var(--panel-border);
+@@ -205,7 +193,19 @@
 transform: translateY(4px);
 }
 
+        /* UTILITY CLASSES */
         /* NEW Style panel for Tactical Tips */
-#debrief-panel {
-background: rgba(231, 76, 60, 0.08);
-border: 1px dashed var(--error-red);
-@@ -223,6 +241,9 @@
+        #debrief-panel {
+            background: rgba(231, 76, 60, 0.08);
+            border: 1px dashed var(--error-red);
+            padding: 10px;
+            margin: 10px auto 15px auto;
+            width: 90%;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+.hidden { display: none !important; }
+.correct { color: var(--success-green) !important; }
+.incorrect { color: var(--error-red) !important; }
+@@ -220,7 +220,6 @@
+<div class="bezel-button b-left">BRT ADJ</div>
+
+<div id="screen">
+        
 <div id="status-bar">
 <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
 <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
-            <div class="status-item">
-                <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
-            </div>
-<div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
+@@ -247,7 +246,13 @@
 </div>
 
-@@ -296,14 +317,11 @@
+<div id="replay-group" class="hidden">
+                <div id="feedback-text" style="margin-bottom: 15px;"></div>
+                <div id="feedback-text"></div>
+                
+                <div id="debrief-panel" class="hidden">
+                    <span class="prompt-amber" style="font-weight: bold;">TACTICAL DEBRIEF:</span> 
+                    <span id="tip-text"></span>
+                </div>
+
+<button id="action-btn" class="aviator-btn">Initialize New Module</button>
+</div>
+
+@@ -261,7 +266,6 @@
+</div>
+
+<script>
+    // Initialize state variables
+let levelCount = 1;
+let correct = 0;
+let incorrect = 0;
+@@ -284,12 +288,24 @@
+const inputGroup = document.getElementById('input-group');
+const replayGroup = document.getElementById('replay-group');
+const feedbackText = document.getElementById('feedback-text');
+    const debriefPanel = document.getElementById('debrief-panel');
+    const tipText = document.getElementById('tip-text');
+
+// Buttons
+const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
 
     /* * Aviation/Technical Memory Tips Data Array
      */
-const memoryTips = {
+    const memoryTips = {
         lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM' instead of 'XFKM') to reduce working memory load.",
         lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right. Do not add predictive characters.",
         transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but in the wrong sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit or pattern in your mind to lock down the exact order.",
         completeMismatch: "SIGNAL LOSS error. The input deviated heavily from the target. Tip: Assign structural associations. Try mentally mapping the letters into physical coordinates or recognizing if any letters clump together into familiar real-world acronyms (e.g., 'ALT', 'HDG').",
         generic: "SCAN RATIO inadequate. Tip: Blink once right as the timer finishes to mentally 'screenshot' the optical grid before typing."
-        lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
-        lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
-        transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
-        completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'.",
-};
+    };
 
 function generateRandomLetter() {
-@@ -367,7 +385,7 @@
+const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
+return String.fromCharCode(charCode);
+@@ -324,10 +340,7 @@
+for (let i = seconds; i > 0; i--) {
+if (!isCountingDown) break; 
+
+            // Update digital display string
+timerDigital.innerText = i + "S";
+            
+            // Modified to scale horizontally via width property
+const fillPercentage = (i / seconds) * 100;
+timerBar.style.width = fillPercentage + "%";
+
+@@ -354,11 +367,11 @@
 startGroup.classList.add('hidden');
 inputGroup.classList.add('hidden');
 replayGroup.classList.add('hidden');
         debriefPanel.classList.add('hidden'); // Hide tips on new round
-        debriefPanel.classList.add('hidden'); 
 wordReadout.style.opacity = 1;
 wordReadout.classList.remove('correct', 'incorrect');
 guessInput.blur();
-@@ -383,17 +401,14 @@
+
+        // Establish full bar width constraint before timer reduction starts
+timerBar.style.width = "100%";
+
+const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
+@@ -370,6 +383,20 @@
 runMemorizationTimer(wordLength);
 }
 
     // Helper logic to analyze inputs and determine the most useful tip
-function analyzeErrorType(guess, actual) {
-if (guess.length < actual.length) return memoryTips.lengthShort;
-if (guess.length > actual.length) return memoryTips.lengthLong;
-
+    function analyzeErrorType(guess, actual) {
+        if (guess.length < actual.length) return memoryTips.lengthShort;
+        if (guess.length > actual.length) return memoryTips.lengthLong;
+        
         // Check if characters match but are out of order (Transposition)
-let sortedGuess = guess.split('').sort().join('');
-let sortedActual = actual.split('').sort().join('');
-if (sortedGuess === sortedActual) return memoryTips.transposition;
-
+        let sortedGuess = guess.split('').sort().join('');
+        let sortedActual = actual.split('').sort().join('');
+        if (sortedGuess === sortedActual) return memoryTips.transposition;
+        
         // Catch-all
-return memoryTips.completeMismatch;
-}
+        return memoryTips.completeMismatch;
+    }
 
-@@ -418,14 +433,12 @@
+function finalizeGuess() {
+if (isCountingDown) return; 
+
+@@ -391,11 +418,17 @@
 levelCount++;
 }
 } else {
@@ -131,6 +258,17 @@ feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
 incorrect++;
 
             // Analyze error and render relevant tactical tip
-const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
-tipText.innerText = diagnosticTip;
-debriefPanel.classList.remove('hidden');
+            const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
+            tipText.innerText = diagnosticTip;
+            debriefPanel.classList.remove('hidden');
+}
+
+if (levelCount >= 10) {
+@@ -404,7 +437,7 @@
+
+updateStatusBar();
+const totalRounds = correct + incorrect;
+        feedbackText.innerHTML = `${feedbackHTML}<br><br>Current Session Score: ${correct}/${totalRounds}`;
+        feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
+replayGroup.classList.remove('hidden');
+}
