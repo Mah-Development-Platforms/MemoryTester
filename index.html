@@ -318,7 +318,7 @@ const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
 
-/* Aviation/Technical Memory Tips Data Array - Fixed Duplicate Properties */
+/* Aviation/Technical Memory Tips Data Array */
 const memoryTips = {
     lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
     lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
@@ -403,24 +403,25 @@ function startRound() {
     runMemorizationTimer(wordLength);
 }
 
-// Helper logic to analyze inputs and determine the most useful tip
 function analyzeErrorType(guess, actual) {
     if (guess.length < actual.length) return memoryTips.lengthShort;
     if (guess.length > actual.length) return memoryTips.lengthLong;
 
-    // Check if characters match but are out of order (Transposition)
     let sortedGuess = guess.split('').sort().join('');
     let sortedActual = actual.split('').sort().join('');
     if (sortedGuess === sortedActual) return memoryTips.transposition;
 
-    // Catch-all
     return memoryTips.completeMismatch;
 }
 
 function finalizeGuess() {
     if (isCountingDown) return; 
 
-    const pilotGuess = guessInput.value.toUpperCase().replace(/\s/g, "");
+    // Capture the original input value formatted with spaced characters for display layout consistency
+    const rawGuess = guessInput.value.toUpperCase();
+    const formattedGuess = rawGuess.split('').join(' ');
+
+    const pilotGuess = rawGuess.replace(/\s/g, "");
     const actualString = currentWordString.replace(/\s/g, "");
 
     inputGroup.classList.add('hidden');
@@ -438,14 +439,15 @@ function finalizeGuess() {
             levelCount++;
         }
     } else {
-        // Incorrect answer fork
+        // Incorrect answer logic updated to show incorrect guess above correct answer
         wordReadout.innerText = "ERROR";
         wordReadout.classList.add('incorrect');
-        feedbackHTML = `<span class="incorrect">DATA MISMATCH.</span><br>
-                       Expected: <span class="correct">${currentWordString}</span>`;
+        
+        feedbackHTML = `<span class="incorrect">DATA MISMATCH DETECTED.</span><br><br>
+                        PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
+                        EXPECTED DATA: <span class="correct">${currentWordString}</span>`;
         incorrect++;
 
-        // Analyze error and render relevant tactical tip
         const diagnosticTip = analyzeErrorType(pilotGuess, actualString);
         tipText.innerText = diagnosticTip;
         debriefPanel.classList.remove('hidden');
@@ -457,7 +459,7 @@ function finalizeGuess() {
 
     updateStatusBar();
     const totalRounds = correct + incorrect;
-    feedbackText.innerHTML = `${feedbackHTML}<br>Current Session Score: ${correct}/${totalRounds}`;
+    feedbackText.innerHTML = `${feedbackHTML}<br><br>Current Session Score: ${correct}/${totalRounds}`;
     replayGroup.classList.remove('hidden');
 }
 
