@@ -442,7 +442,7 @@ function finalizeGuess() {
         wordReadout.classList.add('incorrect');
         
         feedbackHTML = `<span class="incorrect">DATA MISMATCH DETECTED.</span><br><br>
-                           PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
+                             PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
                         EXPECTED DATA: <span class="correct">${currentWordString}</span>`;
         incorrect++;
 
