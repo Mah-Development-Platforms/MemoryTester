@@ -83,7 +83,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-standby);
 }
 
@@ -94,6 +94,25 @@ body {
 .status-item span.cyan-text {
     color: var(--text-active);
     font-weight: bold;
+}
+
+/* Dropdown Array Matrix Style */
+.matrix-select {
+    background: #1c2e3e;
+    border: 1px solid var(--panel-border);
+    color: var(--text-active);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 4px;
+    outline: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.matrix-select option {
+    background: #0a1118;
+    color: var(--text-data);
 }
 
 /* Flight Manual Link & Audio Toggle Style */
@@ -253,10 +272,17 @@ input[type="text"]:focus {
 <div id="screen">
 <div id="status-bar">
     <div class="status-item">SYS STATUS: <span id="sys-status-text" class="cyan-text">ACTIVE</span></div>
+    <div class="status-item">DATA MODE: 
+        <select id="data-mode-select" class="matrix-select">
+            <option value="alpha">LETTERS ONLY</option>
+            <option value="numeric">NUMBERS ONLY</option>
+            <option value="mixed">MIXED DATA</option>
+        </select>
+    </div>
     <div class="status-item">AUDIO: <button id="audio-toggle" class="audio-toggle-btn">ON</button></div>
     <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
     <div class="status-item">
-        <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
+        <a href="strategies.html" target="_blank" class="manual-link">Strategies</a>
     </div>
     <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
 </div>
@@ -306,7 +332,7 @@ let correct = 0;
 let incorrect = 0;
 let currentWordString = "";
 let isCountingDown = false;
-let isAudioMuted = false; // Master volume toggle variable
+let isAudioMuted = false;
 
 // DOM Element References
 const levelDisplay = document.getElementById('level-count');
@@ -327,18 +353,19 @@ const feedbackText = document.getElementById('feedback-text');
 const debriefPanel = document.getElementById('debrief-panel');
 const tipText = document.getElementById('tip-text');
 
-// Buttons & Toggles
+// Controls & Selectors
 const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
 const audioToggleBtn = document.getElementById('audio-toggle');
+const dataModeSelect = document.getElementById('data-mode-select');
 
 /* Aviation/Technical Memory Tips Data Array */
 const memoryTips = {
     lengthShort: "DATA TRUNCATION error. You submitted fewer characters than required. Try 'Chunking': Break the characters into pairs of two (e.g., 'XF KM') to reduce working memory load.",
     lengthLong: "OVER-BUFFER error. Input length exceeds target string. Focus strictly on the data stream as it reads from left-to-right.",
-    transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
-    completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'."
+    transposition: "SEQUENCE TRANSPOSITION error. You had the right letters/digits, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the chunk matrix as a single rhythmic pattern.",
+    completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary connections via 'Pseudoword Synthesis'."
 };
 
 // --- AERONAUTIC SYNTHESIZED SOUND SYSTEM ---
@@ -350,27 +377,22 @@ function initAudio() {
     }
 }
 
-// 1. Tactical UI Keyclick
 function playClickSound() {
     if (isAudioMuted) return;
     initAudio();
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
-    
     osc.type = 'sine';
     osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
-    
     gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-    
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start();
     osc.stop(audioCtx.currentTime + 0.04);
 }
 
-// 2. Master Caution Chime
 function playSuccessChime() {
     if (isAudioMuted) return;
     initAudio();
@@ -389,7 +411,6 @@ function playSuccessChime() {
     });
 }
 
-// 3. System Error / Warning Horn
 function playErrorHorn() {
     if (isAudioMuted) return;
     initAudio();
@@ -397,28 +418,22 @@ function playErrorHorn() {
     let osc1 = audioCtx.createOscillator();
     let osc2 = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
-    
     osc1.type = 'sawtooth';
     osc1.frequency.setValueAtTime(180, t);
-    
     osc2.type = 'sine';
     osc2.frequency.setValueAtTime(185, t); 
-    
     gain.gain.setValueAtTime(0.15, t);
     gain.gain.linearRampToValueAtTime(0.15, t + 0.15);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-    
     osc1.connect(gain);
     osc2.connect(gain);
     gain.connect(audioCtx.destination);
-    
     osc1.start(t);
     osc2.start(t);
     osc1.stop(t + 0.35);
     osc2.stop(t + 0.35);
 }
 
-// 4. Input Timer Expired Alert
 function playTimerEndSound() {
     if (isAudioMuted) return;
     initAudio();
@@ -434,7 +449,6 @@ function playTimerEndSound() {
     osc.stop(audioCtx.currentTime + 0.15);
 }
 
-// Toggle mute function
 function toggleAudioProfile() {
     isAudioMuted = !isAudioMuted;
     if (isAudioMuted) {
@@ -443,20 +457,30 @@ function toggleAudioProfile() {
     } else {
         audioToggleBtn.innerText = "ON";
         audioToggleBtn.classList.remove('muted-state');
-        // Play a quick confirmation click if unmuting
         playClickSound();
     }
 }
 
-function generateRandomLetter() {
-    const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
-    return String.fromCharCode(charCode);
+// --- DYNAMIC DATA GENERATOR FUNCTIONS ---
+function generateRandomCharacter(mode) {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    
+    if (mode === "numeric") {
+        return numbers.charAt(Math.floor(Math.random() * numbers.length));
+    } else if (mode === "mixed") {
+        const combined = letters + numbers;
+        return combined.charAt(Math.floor(Math.random() * combined.length));
+    } else {
+        // Default: alpha
+        return letters.charAt(Math.floor(Math.random() * letters.length));
+    }
 }
 
-function generateMemoryString(length) {
+function generateMemoryString(length, mode) {
     let tempWordArray = [];
     for (let i = 0; i < length; i++) {
-        tempWordArray.push(generateRandomLetter());
+        tempWordArray.push(generateRandomCharacter(mode));
     }
     return tempWordArray.join(" "); 
 }
@@ -516,13 +540,17 @@ function startRound() {
     debriefPanel.classList.add('hidden'); 
     wordReadout.style.opacity = 1;
     wordReadout.classList.remove('correct', 'incorrect');
+    
+    // Lock drop-down select while verification matrix is running
+    dataModeSelect.disabled = true;
     guessInput.blur();
 
     timerBar.style.width = "100%";
 
     const wordLength = Math.floor(Math.random() * ((5 + levelCount) - 4)) + 4;
+    const activeMode = dataModeSelect.value;
 
-    currentWordString = generateMemoryString(wordLength);
+    currentWordString = generateMemoryString(wordLength, activeMode);
     wordReadout.innerText = currentWordString;
     memorizePrompt.classList.remove('hidden');
 
@@ -551,6 +579,9 @@ function finalizeGuess() {
 
     inputGroup.classList.add('hidden');
     wordReadout.style.opacity = 1;
+    
+    // Unlock drop-down parameter profile at checkout
+    dataModeSelect.disabled = false;
 
     let feedbackHTML = "";
 
@@ -570,7 +601,7 @@ function finalizeGuess() {
         wordReadout.classList.add('incorrect');
         
         feedbackHTML = `<span class="incorrect">DATA MISMATCH DETECTED.</span><br><br>
-                        __PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
+                        PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
                         EXPECTED DATA: <span class="correct">${currentWordString}</span>`;
         incorrect++;
 
@@ -594,6 +625,7 @@ startBtn.addEventListener('click', startRound);
 actionBtn.addEventListener('click', startRound);
 submitBtn.addEventListener('click', finalizeGuess);
 audioToggleBtn.addEventListener('click', toggleAudioProfile);
+dataModeSelect.addEventListener('change', playClickSound);
 
 // Dynamic Typing Sounds
 guessInput.addEventListener('input', playClickSound);
