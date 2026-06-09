@@ -87,6 +87,26 @@ body {
     color: var(--text-standby);
 }
 
+/* New layout containers for tighter control alignment */
+.status-left-cluster {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Controls exact spacing between the items on the left */
+}
+
+.status-right-cluster {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Controls exact spacing between telemetry items on the right */
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
 .status-item span {
     color: var(--warning-amber);
 }
@@ -271,20 +291,25 @@ input[type="text"]:focus {
 
 <div id="screen">
 <div id="status-bar">
-    <div class="status-item">SYS STATUS: <span id="sys-status-text" class="cyan-text">ACTIVE</span></div>
-    <div class="status-item">DATA MODE: 
-        <select id="data-mode-select" class="matrix-select">
-            <option value="alpha">LETTERS ONLY</option>
-            <option value="numeric">NUMBERS ONLY</option>
-            <option value="mixed">MIXED DATA</option>
-        </select>
+    <div class="status-left-cluster">
+        <div class="status-item">SYS STATUS: <span id="sys-status-text" class="cyan-text">ACTIVE</span></div>
+        <div class="status-item">DATA MODE: 
+            <select id="data-mode-select" class="matrix-select">
+                <option value="alpha">LETTERS ONLY</option>
+                <option value="numeric">NUMBERS ONLY</option>
+                <option value="mixed">MIXED DATA</option>
+            </select>
+        </div>
+        <div class="status-item">AUDIO: <button id="audio-toggle" class="audio-toggle-btn">ON</button></div>
     </div>
-    <div class="status-item">AUDIO: <button id="audio-toggle" class="audio-toggle-btn">ON</button></div>
-    <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
-    <div class="status-item">
-        <a href="strategies.html" target="_blank" class="manual-link">Strategies</a>
+    
+    <div class="status-right-cluster">
+        <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
+        <div class="status-item">
+            <a href="strategies.html" target="_blank" class="manual-link">Strategies</a>
+        </div>
+        <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
     </div>
-    <div class="status-item">CORR: <span id="correct-count">00</span> INCORR: <span id="incorrect-count">00</span></div>
 </div>
 
 <div id="main-display">
@@ -472,7 +497,6 @@ function generateRandomCharacter(mode) {
         const combined = letters + numbers;
         return combined.charAt(Math.floor(Math.random() * combined.length));
     } else {
-        // Default: alpha
         return letters.charAt(Math.floor(Math.random() * letters.length));
     }
 }
@@ -541,7 +565,6 @@ function startRound() {
     wordReadout.style.opacity = 1;
     wordReadout.classList.remove('correct', 'incorrect');
     
-    // Lock drop-down select while verification matrix is running
     dataModeSelect.disabled = true;
     guessInput.blur();
 
@@ -580,7 +603,6 @@ function finalizeGuess() {
     inputGroup.classList.add('hidden');
     wordReadout.style.opacity = 1;
     
-    // Unlock drop-down parameter profile at checkout
     dataModeSelect.disabled = false;
 
     let feedbackHTML = "";
