@@ -304,7 +304,7 @@ input[type="text"]:focus {
     </div>
     
     <div class="status-right-cluster">
-        <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
+        <div class="status-item"> MEMORY: <span>[LEVEL <span id="level-count">01</span>]</span></div>
         <div class="status-item">
             <a href="strategies.html" target="_blank" class="manual-link">Strategies</a>
         </div>
@@ -623,7 +623,7 @@ function finalizeGuess() {
         wordReadout.classList.add('incorrect');
         
         feedbackHTML = `<span class="incorrect">DATA MISMATCH DETECTED.</span><br><br>
-                        PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
+                        __PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
                         EXPECTED DATA: <span class="correct">${currentWordString}</span>`;
         incorrect++;
 
