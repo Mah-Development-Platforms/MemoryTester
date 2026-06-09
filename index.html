@@ -417,7 +417,6 @@ function analyzeErrorType(guess, actual) {
 function finalizeGuess() {
     if (isCountingDown) return; 
 
-    // Capture the original input value formatted with spaced characters for display layout consistency
     const rawGuess = guessInput.value.toUpperCase();
     const formattedGuess = rawGuess.split('').join(' ');
 
@@ -439,7 +438,6 @@ function finalizeGuess() {
             levelCount++;
         }
     } else {
-        // Incorrect answer logic updated to show incorrect guess above correct answer
         wordReadout.innerText = "ERROR";
         wordReadout.classList.add('incorrect');
         
@@ -463,14 +461,26 @@ function finalizeGuess() {
     replayGroup.classList.remove('hidden');
 }
 
-// Event Listeners
+// Click Event Listeners
 startBtn.addEventListener('click', startRound);
 actionBtn.addEventListener('click', startRound);
 submitBtn.addEventListener('click', finalizeGuess);
 
-guessInput.addEventListener('keypress', function (e) {
+// Global Keyboard State Handler
+window.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
-        finalizeGuess();
+        // 1. If Initial Start UI is showing, trigger start button
+        if (!startGroup.classList.contains('hidden')) {
+            startRound();
+        } 
+        // 2. If User Input section is showing, submit guess
+        else if (!inputGroup.classList.contains('hidden')) {
+            finalizeGuess();
+        } 
+        // 3. If Replay/Scoreboard screen is showing, initialize next module
+        else if (!replayGroup.classList.contains('hidden')) {
+            startRound();
+        }
     }
 });
 </script>
