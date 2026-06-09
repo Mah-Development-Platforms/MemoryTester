@@ -89,11 +89,15 @@ body {
 
 .status-item span {
     color: var(--warning-amber);
+}
+
+.status-item span.cyan-text {
+    color: var(--text-active);
     font-weight: bold;
 }
 
-/* Flight Manual Link/Button Style */
-.manual-link {
+/* Flight Manual Link & Audio Toggle Style */
+.manual-link, .audio-toggle-btn {
     color: #000;
     background-color: var(--warning-amber);
     text-decoration: none;
@@ -102,11 +106,19 @@ body {
     padding: 2px 8px;
     border-radius: 3px;
     text-transform: uppercase;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    border: none;
+    font-family: 'Roboto Mono', monospace;
+    cursor: pointer;
 }
 
-.manual-link:hover {
+.manual-link:hover, .audio-toggle-btn:hover {
     background-color: #f39c12;
+}
+
+.audio-toggle-btn.muted-state {
+    background-color: #7f8c8d;
+    color: #fff;
 }
 
 #main-display {
@@ -240,7 +252,8 @@ input[type="text"]:focus {
 
 <div id="screen">
 <div id="status-bar">
-    <div class="status-item">SYS STATUS: <span>ACTIVE</span></div>
+    <div class="status-item">SYS STATUS: <span id="sys-status-text" class="cyan-text">ACTIVE</span></div>
+    <div class="status-item">AUDIO: <button id="audio-toggle" class="audio-toggle-btn">ON</button></div>
     <div class="status-item">MODULE: MEMORY <span>[LEVEL <span id="level-count">01</span>]</span></div>
     <div class="status-item">
         <a href="strategies.html" target="_blank" class="manual-link">Memory Strategies</a>
@@ -293,6 +306,7 @@ let correct = 0;
 let incorrect = 0;
 let currentWordString = "";
 let isCountingDown = false;
+let isAudioMuted = false; // Master volume toggle variable
 
 // DOM Element References
 const levelDisplay = document.getElementById('level-count');
@@ -313,10 +327,11 @@ const feedbackText = document.getElementById('feedback-text');
 const debriefPanel = document.getElementById('debrief-panel');
 const tipText = document.getElementById('tip-text');
 
-// Buttons
+// Buttons & Toggles
 const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
 const actionBtn = document.getElementById('action-btn');
+const audioToggleBtn = document.getElementById('audio-toggle');
 
 /* Aviation/Technical Memory Tips Data Array */
 const memoryTips = {
@@ -325,6 +340,113 @@ const memoryTips = {
     transposition: "SEQUENCE TRANSPOSITION error. You had the right letters, but out of sequence. Tip: Use 'Subvocalization'. Quietly pronounce the nonsense word as a single cohesive unit.",
     completeMismatch: "SIGNAL LOSS error. The input deviated heavily. Tip: Assign structural associations or try to build temporary words via 'Pseudoword Synthesis'."
 };
+
+// --- AERONAUTIC SYNTHESIZED SOUND SYSTEM ---
+let audioCtx = null;
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// 1. Tactical UI Keyclick
+function playClickSound() {
+    if (isAudioMuted) return;
+    initAudio();
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
+    
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+}
+
+// 2. Master Caution Chime
+function playSuccessChime() {
+    if (isAudioMuted) return;
+    initAudio();
+    let t = audioCtx.currentTime;
+    [587.33, 880].forEach((freq, idx) => {
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + (idx * 0.08));
+        gain.gain.setValueAtTime(0.12, t + (idx * 0.08));
+        gain.gain.exponentialRampToValueAtTime(0.001, t + (idx * 0.08) + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t + (idx * 0.08));
+        osc.stop(t + (idx * 0.08) + 0.3);
+    });
+}
+
+// 3. System Error / Warning Horn
+function playErrorHorn() {
+    if (isAudioMuted) return;
+    initAudio();
+    let t = audioCtx.currentTime;
+    let osc1 = audioCtx.createOscillator();
+    let osc2 = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(180, t);
+    
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(185, t); 
+    
+    gain.gain.setValueAtTime(0.15, t);
+    gain.gain.linearRampToValueAtTime(0.15, t + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+    
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc1.start(t);
+    osc2.start(t);
+    osc1.stop(t + 0.35);
+    osc2.stop(t + 0.35);
+}
+
+// 4. Input Timer Expired Alert
+function playTimerEndSound() {
+    if (isAudioMuted) return;
+    initAudio();
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.15);
+}
+
+// Toggle mute function
+function toggleAudioProfile() {
+    isAudioMuted = !isAudioMuted;
+    if (isAudioMuted) {
+        audioToggleBtn.innerText = "MUTED";
+        audioToggleBtn.classList.add('muted-state');
+    } else {
+        audioToggleBtn.innerText = "ON";
+        audioToggleBtn.classList.remove('muted-state');
+        // Play a quick confirmation click if unmuting
+        playClickSound();
+    }
+}
 
 function generateRandomLetter() {
     const charCode = Math.floor(Math.random() * (91 - 65)) + 65;
@@ -364,9 +486,12 @@ async function runMemorizationTimer(seconds) {
         const fillPercentage = (i / seconds) * 100;
         timerBar.style.width = fillPercentage + "%";
 
+        if(i > 1) { setTimeout(playClickSound, baseInterval_ms / 2); }
+
         await sleep(baseInterval_ms);
     }
 
+    if (isCountingDown) { playTimerEndSound(); }
     isCountingDown = false;
     completeMemorizationPhase();
 }
@@ -383,6 +508,7 @@ function completeMemorizationPhase() {
 }
 
 function startRound() {
+    playClickSound();
     updateStatusBar();
     startGroup.classList.add('hidden');
     inputGroup.classList.add('hidden');
@@ -429,6 +555,7 @@ function finalizeGuess() {
     let feedbackHTML = "";
 
     if (pilotGuess === actualString) {
+        playSuccessChime(); 
         wordReadout.innerText = "VALIDATED";
         wordReadout.classList.add('correct');
         feedbackHTML = `<span class="correct">DATA MATCH CONFIRMED.</span>`;
@@ -438,11 +565,12 @@ function finalizeGuess() {
             levelCount++;
         }
     } else {
+        playErrorHorn(); 
         wordReadout.innerText = "ERROR";
         wordReadout.classList.add('incorrect');
         
         feedbackHTML = `<span class="incorrect">DATA MISMATCH DETECTED.</span><br><br>
-                        __PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
+                        PILOT INPUT: <span class="incorrect">${formattedGuess || "[EMPTY]"}</span><br>
                         EXPECTED DATA: <span class="correct">${currentWordString}</span>`;
         incorrect++;
 
@@ -465,19 +593,20 @@ function finalizeGuess() {
 startBtn.addEventListener('click', startRound);
 actionBtn.addEventListener('click', startRound);
 submitBtn.addEventListener('click', finalizeGuess);
+audioToggleBtn.addEventListener('click', toggleAudioProfile);
+
+// Dynamic Typing Sounds
+guessInput.addEventListener('input', playClickSound);
 
 // Global Keyboard State Handler
 window.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
-        // 1. If Initial Start UI is showing, trigger start button
         if (!startGroup.classList.contains('hidden')) {
             startRound();
         } 
-        // 2. If User Input section is showing, submit guess
         else if (!inputGroup.classList.contains('hidden')) {
             finalizeGuess();
         } 
-        // 3. If Replay/Scoreboard screen is showing, initialize next module
         else if (!replayGroup.classList.contains('hidden')) {
             startRound();
         }
